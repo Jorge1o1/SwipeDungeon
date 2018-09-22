@@ -1,0 +1,100 @@
+var c = document.getElementById("myCanvas");
+var ctx = c.getContext("2d");
+
+document.getElementById("myCanvas").addEventListener("mousedown", function(event) {handleInput(0, 0, event);});
+document.getElementById("myCanvas").addEventListener("touchmove", function(event) {handleInput(1, 0, event);});
+document.getElementById("myCanvas").addEventListener("mouseup", function(event) {handleInput(0, 1, event);});
+document.getElementById("myCanvas").addEventListener("touchend", function(event) {handleInput(0, 1, event);});
+
+var FRAMEWORK_CONSTANTS = {
+	FPS: 60,
+	running: true,
+};
+
+
+//FOR REFERENCE:
+var game = {
+	player: {
+		constants: {
+			speed: 2,
+			health: 100
+		},
+		jump:{
+			target:{
+				x: -1,
+				y: -1,
+			}
+		},
+		bound:{
+			position:{
+				x: 0,
+				y: 0
+			},
+			size:{
+				x:20,
+				y:20
+			}
+		},
+		state: 0 //0 is normal, 1 is jumping
+	},
+	enemies: [],
+	mouse: {
+		start:{
+			x: -1,
+			y: -1
+		}
+	}
+};
+
+function handlePhysics(){
+	updateEnemies(game.player, game.enemies);
+	updatePlayerPosition(game.player);
+	checkCollisions(game.player, game.enemies);
+	updateFX();
+}
+
+function handleDrawing(){
+	ctx.clearRect(0, 0, c.width, c.height);
+	drawAssets();
+	drawFX();
+	drawUI();
+}
+
+//DONT MODIFY:
+function handleInput(type, action, e){ //function optimized for portability; runs on computer (0) and mobile (1)
+	if(type == 0){
+		//handle computer input
+		if(action == 0){
+			//handle mousemove
+			if(game.mouse.start.x == -1 && game.mouse.start.y == -1){
+				game.mouse.start = {x: e.clientX, y: e.clientY};
+			}
+		}else{
+			//handle mouseup
+			var swipe = {x: (e.clientX - game.mouse.start.x), y: (e.clientY - game.mouse.start.y)};
+			game.mouse.start = {x: -1, y: -1};
+			receiveInput(game.player, swipe);
+		}
+	}else{
+		//handle mobile input - NOTE: THIS HAS NOT BEEN UNIT TESTED YET
+		if(action == 0){
+			//handle touchmove
+			if(game.mouse.start.x == -1 && game.mouse.start.y == -1){
+				game.mouse.start = {x: e.touches[0].pageX, y: e.touches[0].pageY};
+			}
+
+		}else{
+			//handle touchup
+			var swipe = {x: (e.touches[0].pageX - game.mouse.start.x), y: (e.touches[0].pageY - game.mouse.start.y)};
+			game.mouse.start = {x: -1, y: -1};
+			receiveInput(game.player, swipe);
+		}
+	}
+}
+
+window.setInterval(function(){if(FRAMEWORK_CONSTANTS.running){handlePhysics(); handleDrawing();}}, (1000/FRAMEWORK_CONSTANTS.FPS));
+
+
+
+
+
