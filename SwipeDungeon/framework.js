@@ -14,13 +14,19 @@ var FRAMEWORK_CONSTANTS = {
 
 //FOR REFERENCE:
 var game = {
+	tick: 0, //do not modify
+	constants:{
+		enemySpawnRate: 5,
+		friction: 0.998
+	},
 	player: {
 		constants: {
 			speed: 2,
 			health: 100
 		},
 		jump:{
-			target:{
+			targets:[],
+			currentTarget:{
 				x: -1,
 				y: -1,
 			}
@@ -43,10 +49,14 @@ var game = {
 			x: -1,
 			y: -1
 		}
-	}
+	},
+	particles: []
 };
 
 function handlePhysics(){
+	game.tick++;
+
+	if(game.tick % game.constants.enemySpawnRate == 0) spawnEnemy();
 	updateEnemies(game.player, game.enemies);
 	updatePlayerPosition(game.player);
 	checkCollisions(game.player, game.enemies);

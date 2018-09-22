@@ -9,7 +9,6 @@ function drawAssets(){
 function drawFX(){
 	//This function is triggered every frame.
 	//Draw all FX particles.
-	
 }
 
 function drawUI(){
