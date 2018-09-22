@@ -16,15 +16,16 @@ function updatePlayerPosition(player){
 }
 
 function spawnEnemies(enemies){
-	
+
 }
 
 function checkCollisions(player, enemies){
 	//This function is triggered every frame.
-	//First, check if player is jumping (player kills enemies if jumping). 
+	//First, check if player is jumping (player kills enemies if jumping).
 	//If not and player and enemies have collided, player takes damage.
 	//Return nothing.
 
+	console.log("ho");
 
 	if(player.state == 0){ //not jumping (enemy hurts player)
 		for(var i = 0; i < enemies.length; i++){
