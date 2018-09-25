@@ -16,7 +16,7 @@ var FRAMEWORK_CONSTANTS = {
 var game = {
 	tick: 0, //do not modify
 	constants:{
-		enemySpawnRate: 5,
+		enemySpawnRate: 5000,
 		friction: 0.998
 	},
 	player: {
@@ -56,7 +56,7 @@ var game = {
 function handlePhysics(){
 	game.tick++;
 
-	if(game.tick % game.constants.enemySpawnRate == 0) spawnEnemy();
+	if(game.tick % game.constants.enemySpawnRate == 0) spawnEnemy(game.enemies);
 	updateEnemies(game.player, game.enemies);
 	updatePlayerPosition(game.player);
 	checkCollisions(game.player, game.enemies);

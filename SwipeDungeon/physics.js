@@ -4,21 +4,26 @@ function receiveInput(player, swipes){
 	//Return nothing.
 
 	player.state = 1;
-	player.jump.targets = swipes;
+	player.jump.currentTarget.x = player.bound.position.x + swipes.x;
+	player.jump.currentTarget.y = player.bound.position.y + swipes.y;
 }
 
 function updatePlayerPosition(player){
 	if(player.jump.targets.length != 0){
 
 	}
-	if(player.jump.target.x != -1 && player.jump.target.y != -1){
-		player.bound.position.x -= (player.bound.position.x - player.jump.target.x)/3;
-		player.bound.position.y -= (player.bound.position.y - player.jump.target.y)/3;
+	if(player.jump.currentTarget.x != -1 && game.player.jump.currentTarget.y != -1){
+		player.bound.position.x -= (player.bound.position.x - player.jump.currentTarget.x)/3;
+		player.bound.position.y -= (player.bound.position.y - player.jump.currentTarget.y)/3;
 	}
 }
 
 function spawnEnemy(enemies){
-
+	if (enemies.length <= 10) {
+	console.log(enemies.length);
+	var enemy = { bound: { position:{ x: Math.random() * 500, y: Math.random() * 500}, size:{ x:20, y:20}}};
+	enemies.unshift(enemy);
+	}
 }
 
 function checkCollisions(player, enemies){
