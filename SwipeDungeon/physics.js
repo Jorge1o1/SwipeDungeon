@@ -20,8 +20,9 @@ function updatePlayerPosition(player){
 }
 
 function spawnEnemy(enemies){
-	if (enemies.length <= 1) {
-	var enemy = { bound: { position:{ x: parseInt(Math.random() * 500), y: Math.random() * 500}, size:{ x:20, y:20}}};
+	if (enemies.length <= 10) {
+	var enemy = { bound: { position:{ x: parseInt(Math.random() * 500), y: Math.random() * 500}, size:{ x:20, y:20},
+	 velocity: parseInt(Math.random()*2) + 1}};
 	enemies.unshift(enemy);
 	}
 }
@@ -54,24 +55,53 @@ function updateEnemies(player, enemies){
 	for(var i = 0; i < enemies.length; i++) {
 		if(enemies[i].bound.position.x != player.bound.position.x){
 			if(enemies[i].bound.position.x < player.bound.position.x){
-				enemies[i].bound.position.x = enemies[i].bound.position.x + 1;
+				if(checkEnemyCollision(enemies[i], enemies, 1)){
+				} else {
+					enemies[i].bound.position.x = enemies[i].bound.position.x + enemies[i].bound.velocity;
+				}
 			}
 			if(enemies[i].bound.position.x > player.bound.position.x){
-				enemies[i].bound.position.x = enemies[i].bound.position.x - 1;
+				if(checkEnemyCollision(enemies[i], enemies, -1)){
+				} else {
+					enemies[i].bound.position.x = enemies[i].bound.position.x - enemies[i].bound.velocity;
+				}
 			}			
 		}
 		
 		if(enemies[i].bound.position.y != player.bound.position.y){
 			if(enemies[i].bound.position.y < player.bound.position.y){
-				enemies[i].bound.position.y = enemies[i].bound.position.y + 1;
+				if(checkEnemyCollision(enemies[i], enemies, 1)){
+				} else {
+					enemies[i].bound.position.y = enemies[i].bound.position.y + enemies[i].bound.velocity;
+				}
 			}
 			if(enemies[i].bound.position.y > player.bound.position.y){
-				enemies[i].bound.position.y = enemies[i].bound.position.y - 1;
+				if(checkEnemyCollision(enemies[i], enemies, -1)){
+				} else {
+					enemies[i].bound.position.y = enemies[i].bound.position.y - enemies[i].bound.velocity;
+				}
 			}			
 		}
 	}
 }
 
+function checkEnemyCollision(enemy, enemies, vel){
+	for(var j = 0; j < enemies.length; j++) {
+			if(enemy == enemies[j]);
+			else if (((enemy.bound.position.x + (enemy.bound.size.x/2) < enemies[j].bound.position.x + enemies[j].bound.size.x/2)
+				&& (enemy.bound.position.x + (enemy.bound.size.x/2) > enemies[j].bound.position.x - (enemies[j].bound.size.x/2))
+				&& (enemy.bound.position.y + (enemy.bound.size.y/2) < enemies[j].bound.position.y + (enemies[j].bound.size.y/2))
+				&& (enemy.bound.position.y + (enemy.bound.size.y/2) > enemies[j].bound.position.y - (enemies[j].bound.size.y/2))  && vel > 0)
+				
+				|| ((enemy.bound.position.x - (enemy.bound.size.x/2) < enemies[j].bound.position.x + (enemies[j].bound.size.x/2))
+				&& (enemy.bound.position.x - (enemy.bound.size.x/2) > enemies[j].bound.position.x - (enemies[j].bound.size.x/2)) 
+				&& (enemy.bound.position.y - (enemy.bound.size.y/2) < enemies[j].bound.position.y + (enemies[j].bound.size.y/2))
+				&& (enemy.bound.position.y - (enemy.bound.size.y/2) > enemies[j].bound.position.y - (enemies[j].bound.size.y/2))  && vel > 0)) {
+				return true;
+		}
+	}
+	return false;
+}
 
 function spawnParticles(x, y, particleSize, color, amount){
 	//
