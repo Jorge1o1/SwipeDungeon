@@ -6,6 +6,7 @@ function receiveInput(player, swipes){
 	player.state = 1;
 	player.jump.currentTarget.x = player.bound.position.x + swipes.x;
 	player.jump.currentTarget.y = player.bound.position.y + swipes.y;
+	player.state = 0;
 }
 
 function updatePlayerPosition(player){
@@ -13,15 +14,14 @@ function updatePlayerPosition(player){
 
 	}
 	if(player.jump.currentTarget.x != -1 && game.player.jump.currentTarget.y != -1){
-		player.bound.position.x -= (player.bound.position.x - player.jump.currentTarget.x)/3;
+		player.bound.position.x -= parseInt((player.bound.position.x - player.jump.currentTarget.x)/3);
 		player.bound.position.y -= (player.bound.position.y - player.jump.currentTarget.y)/3;
 	}
 }
 
 function spawnEnemy(enemies){
-	if (enemies.length <= 10) {
-	console.log(enemies.length);
-	var enemy = { bound: { position:{ x: Math.random() * 500, y: Math.random() * 500}, size:{ x:20, y:20}}};
+	if (enemies.length <= 1) {
+	var enemy = { bound: { position:{ x: parseInt(Math.random() * 500), y: Math.random() * 500}, size:{ x:20, y:20}}};
 	enemies.unshift(enemy);
 	}
 }
@@ -51,7 +51,27 @@ function updateEnemies(player, enemies){
 	//There is more freedom here to have fun with the enemy AI.
 	//You could just have each enemy move straight towards the player.
 	//Return nothing.
+	for(var i = 0; i < enemies.length; i++) {
+		if(enemies[i].bound.position.x != player.bound.position.x){
+			if(enemies[i].bound.position.x < player.bound.position.x){
+				enemies[i].bound.position.x = enemies[i].bound.position.x + 1;
+			}
+			if(enemies[i].bound.position.x > player.bound.position.x){
+				enemies[i].bound.position.x = enemies[i].bound.position.x - 1;
+			}			
+		}
+		
+		if(enemies[i].bound.position.y != player.bound.position.y){
+			if(enemies[i].bound.position.y < player.bound.position.y){
+				enemies[i].bound.position.y = enemies[i].bound.position.y + 1;
+			}
+			if(enemies[i].bound.position.y > player.bound.position.y){
+				enemies[i].bound.position.y = enemies[i].bound.position.y - 1;
+			}			
+		}
+	}
 }
+
 
 function spawnParticles(x, y, particleSize, color, amount){
 	//
