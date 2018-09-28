@@ -18,6 +18,9 @@ function drawFX(){
 function drawUI(){
 	//This function is triggered every frame.
 	//For now, draw Coins, Health.
-	ctx.fillStyle = "yellow"; 
-	ctx.filledArc(100,75,50,0,2*Math.PI);
+	ctx.fillStyle = "yellow"
+	for (var i = Math.random() * 6 + 1; i > 0; i--) {
+	 	ctx.filledArc(100,75,50,0,2*Math.PI);
+	}
+	
 }
