@@ -20,7 +20,9 @@ function drawUI(){
 	//For now, draw Coins, Health.
 	ctx.fillStyle = "yellow"
 	for (var i = Math.random() * 6 + 1; i > 0; i--) {
-	 	ctx.filledArc(100,75,50,0,2*Math.PI);
+	 	ctx.filledArc(Math.random(),Math.Random(),50,0,2*Math.PI);
 	}
+	ctx.fillStyle = "red"
+        ctx.filledRectangle(ctx.length()/2, 10, game.player.health, 5);
 	
 }
