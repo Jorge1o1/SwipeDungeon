@@ -13,6 +13,11 @@ function drawAssets(){
 function drawFX(){
 	//This function is triggered every frame.
 	//Draw all FX particles.
+	if(game.player.bound.position.x == 0 && game.player.bound.position.y == 0){
+		for ( var i = 0; i< 1124; i++){
+		//In this draw particles in the position of the enemy killed
+		}
+	}
 }
 
 function drawUI(){
