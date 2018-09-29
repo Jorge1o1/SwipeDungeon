@@ -10,13 +10,13 @@ function receiveInput(player, swipes){
 }
 
 function updatePlayerPosition(player){
-	// if(player.jump.targets.length != 0){
-	//
-	// }
-	// if(player.jump.currentTarget.x != -1 && game.player.jump.currentTarget.y != -1){
-	// 	player.bound.position.x -= parseInt((player.bound.position.x - player.jump.currentTarget.x)/3);
-	// 	player.bound.position.y -= (player.bound.position.y - player.jump.currentTarget.y)/3;
-	// }
+	if(player.jump.targets.length != 0){
+
+	}
+	if(player.jump.currentTarget.x != -1 && game.player.jump.currentTarget.y != -1){
+		player.bound.position.x -= parseInt((player.bound.position.x - player.jump.currentTarget.x)/3);
+		player.bound.position.y -= (player.bound.position.y - player.jump.currentTarget.y)/3;
+	}
 }
 
 function spawnEnemy(enemies){
@@ -33,18 +33,18 @@ function checkCollisions(player, enemies){
 	//If not and player and enemies have collided, player takes damage.
 	//Return nothing.
 
-	if(player.state == 0){ //not jumping (enemy hurts player)
-		for(var i = 0; i < enemies.length; i++){
-			if (game.player.bound.position.x - enemies[i].bound.position.x < 5 &&
-				game.player.bound.position.y - enemies[i].bound.position.y < 5)
-				game.player.bound.constants.health--;
-				console.log(game.player.bound.constants.health);
-		}
-	}else{ //jumping (player hurts enemy)
-		if (game.player.bound.position.x - enemies[i].bound.position.x < 5 &&
-			game.player.bound.position.y - enemies[i].bound.position.y < 5)
-				enemies[i].splice();
-	}
+	// if(player.state == 0){ //not jumping (enemy hurts player)
+	// 	for(var i = 0; i < enemies.length; i++){
+	// 		if (game.player.bound.position.x - enemies[i].bound.position.x < 5 &&
+	// 			game.player.bound.position.y - enemies[i].bound.position.y < 5)
+	// 			game.player.bound.constants.health--;
+	// 			console.log(game.player.bound.constants.health);
+	// 	}
+	// }else{ //jumping (player hurts enemy)
+	// 	if (game.player.bound.position.x - enemies[i].bound.position.x < 5 &&
+	// 		game.player.bound.position.y - enemies[i].bound.position.y < 5)
+	// 			enemies[i].splice();
+	// }
 
 
 }
