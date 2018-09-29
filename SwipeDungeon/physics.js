@@ -33,20 +33,18 @@ function checkCollisions(player, enemies){
 	//If not and player and enemies have collided, player takes damage.
 	//Return nothing.
 
-	// if(player.state == 0){ //not jumping (enemy hurts player)
-	// 	for(var i = 0; i < enemies.length; i++){
-	// 		if (game.player.bound.position.x - enemies[i].bound.position.x < 5 &&
-	// 			game.player.bound.position.y - enemies[i].bound.position.y < 5)
-	// 			game.player.bound.constants.health--;
-	// 			console.log(game.player.bound.constants.health);
-	// 	}
-	// }else{ //jumping (player hurts enemy)
-	// 	if (game.player.bound.position.x - enemies[i].bound.position.x < 5 &&
-	// 		game.player.bound.position.y - enemies[i].bound.position.y < 5)
-	// 			enemies[i].splice();
-	// }
-
-
+	for(var i = 0; i < enemies.length; i++){
+		if(player.state == 0){ //not jumping (enemy hurts player)
+			if (game.player.bound.position.x - enemies[i].bound.position.x < 5 &&
+				game.player.bound.position.y - enemies[i].bound.position.y < 5)
+				game.player.bound.constants.health--;
+				console.log(game.player.bound.constants.health);
+		}else{ //jumping (player hurts enemy)
+			if (game.player.bound.position.x - enemies[i].bound.position.x < 5 &&
+				game.player.bound.position.y - enemies[i].bound.position.y < 5)
+				enemies[i].splice();
+		}
+	}
 }
 
 function updateEnemies(player, enemies){
