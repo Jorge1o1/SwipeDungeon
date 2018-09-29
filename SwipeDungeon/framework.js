@@ -20,6 +20,7 @@ var game = {
 		friction: 0.998
 	},
 	player: {
+		health: 100,
 		constants: {
 			speed: 2,
 			health: 100
