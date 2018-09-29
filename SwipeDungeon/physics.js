@@ -20,7 +20,7 @@ function updatePlayerPosition(player){
 }
 
 function spawnEnemy(enemies){
-	if (enemies.length <= 10) {
+	if (enemies.length <= 4) {
 	var enemy = { bound: { position:{ x: parseInt(Math.random() * 500), y: Math.random() * 500}, size:{ x:20, y:20},
 	 velocity: parseInt(Math.random()*2) + 1}};
 	enemies.unshift(enemy);
@@ -38,6 +38,7 @@ function checkCollisions(player, enemies){
 			if (game.player.bound.position.x - enemies[i].bound.position.x < 5 &&
 				game.player.bound.position.y - enemies[i].bound.position.y < 5)
 				game.player.bound.constants.health--;
+				console.log(game.player.bound.constants.health);
 		}
 	}else{ //jumping (player hurts enemy)
 		if (game.player.bound.position.x - enemies[i].bound.position.x < 5 &&
