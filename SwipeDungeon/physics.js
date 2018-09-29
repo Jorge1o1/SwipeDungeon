@@ -29,19 +29,20 @@ function spawnEnemy(enemies){
 
 function checkCollisions(player, enemies){
 	//This function is triggered every frame.
-	//First, check if player is jumping (player kills enemies if jumping). 
+	//First, check if player is jumping (player kills enemies if jumping).
 	//If not and player and enemies have collided, player takes damage.
 	//Return nothing.
 
-
 	if(player.state == 0){ //not jumping (enemy hurts player)
 		for(var i = 0; i < enemies.length; i++){
-			//if touching player
-				//player gets hurt --
+			if (game.player.bound.position.x - enemies[i].bound.position.x < 5 &&
+				game.player.bound.position.y - enemies[i].bound.position.y < 5)
+				game.player.bound.constants.health--;
 		}
 	}else{ //jumping (player hurts enemy)
-			//if touching player
-				//enemy dies (.splice)
+		if (game.player.bound.position.x - enemies[i].bound.position.x < 5 &&
+			game.player.bound.position.y - enemies[i].bound.position.y < 5)
+				enemies[i].splice();
 	}
 
 
@@ -65,9 +66,9 @@ function updateEnemies(player, enemies){
 				} else {
 					enemies[i].bound.position.x = enemies[i].bound.position.x - enemies[i].bound.velocity;
 				}
-			}			
+			}
 		}
-		
+
 		if(enemies[i].bound.position.y != player.bound.position.y){
 			if(enemies[i].bound.position.y < player.bound.position.y){
 				if(checkEnemyCollision(enemies[i], enemies, 1)){
@@ -80,7 +81,7 @@ function updateEnemies(player, enemies){
 				} else {
 					enemies[i].bound.position.y = enemies[i].bound.position.y - enemies[i].bound.velocity;
 				}
-			}			
+			}
 		}
 	}
 }
@@ -92,9 +93,9 @@ function checkEnemyCollision(enemy, enemies, vel){
 				&& (enemy.bound.position.x + (enemy.bound.size.x/2) > enemies[j].bound.position.x - (enemies[j].bound.size.x/2))
 				&& (enemy.bound.position.y + (enemy.bound.size.y/2) < enemies[j].bound.position.y + (enemies[j].bound.size.y/2))
 				&& (enemy.bound.position.y + (enemy.bound.size.y/2) > enemies[j].bound.position.y - (enemies[j].bound.size.y/2))  && vel > 0)
-				
+
 				|| ((enemy.bound.position.x - (enemy.bound.size.x/2) < enemies[j].bound.position.x + (enemies[j].bound.size.x/2))
-				&& (enemy.bound.position.x - (enemy.bound.size.x/2) > enemies[j].bound.position.x - (enemies[j].bound.size.x/2)) 
+				&& (enemy.bound.position.x - (enemy.bound.size.x/2) > enemies[j].bound.position.x - (enemies[j].bound.size.x/2))
 				&& (enemy.bound.position.y - (enemy.bound.size.y/2) < enemies[j].bound.position.y + (enemies[j].bound.size.y/2))
 				&& (enemy.bound.position.y - (enemy.bound.size.y/2) > enemies[j].bound.position.y - (enemies[j].bound.size.y/2))  && vel > 0)) {
 				return true;
