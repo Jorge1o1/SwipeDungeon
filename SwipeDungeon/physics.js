@@ -35,17 +35,41 @@ function checkCollisions(player, enemies){
 	//If not and player and enemies have collided, player takes damage.
 	//Return nothing.
 
-	 for(var i = 0; i < enemies.length; i++){
+
+	for(var i = 0; i < enemies.length; i++){
+		for(var j = i+1; j < enemies.length; j++){
+			var deltaX = enemies[j].bound.position.x - enemies[i].bound.position.x;
+			var deltaY = enemies[j].bound.position.y - enemies[i].bound.position.y;
+			if(Math.abs(deltaX) < enemies[i].bound.size.x && Math.abs(deltaY) < enemies[i].bound.size.y){
+				//overlapping
+				if(Math.abs(deltaX) > Math.abs(deltaY)){
+					//nudging left-right
+					if(deltaX < 0){ //nudging left
+						enemies[j].bound.position.x = enemies[i].bound.position.x - enemies[j].bound.size.x;
+					}else{ //nudge right
+						enemies[j].bound.position.x = enemies[i].bound.position.x + enemies[j].bound.size.x;
+					}
+				}else{
+					//nudging up-down
+					if(deltaY < 0){ //nudging left
+						enemies[j].bound.position.y = enemies[i].bound.position.y - enemies[j].bound.size.y;
+					}else{ //nudge right
+						enemies[j].bound.position.y = enemies[i].bound.position.xy+ enemies[j].bound.size.y;
+					}
+				}
+			}
+		}
+	}
+
+	for(var i = 0; i < enemies.length; i++){
 	 	if (Math.abs(enemies[i].bound.position.x - game.player.bound.position.x) < enemies[i].bound.size.x && Math.abs(enemies[i].bound.position. y- game.player.bound.position.y) < enemies[i].bound.size.y){
-		 	console.log(player.state);
 		 	if(player.state == 0){ //not jumping (enemy hurts player)		
 		 		game.player.health--;
 		 	}else{ //jumping (player hurts enemy)
 		 		enemies.splice(i, 1);
 		 	}
 	 	}
-	 	
-	 }
+	}
 }
 
 function updateEnemies(player, enemies){
@@ -54,17 +78,24 @@ function updateEnemies(player, enemies){
 	//You could just have each enemy move straight towards the player.
 	//Return nothing.
 	for(var i = 0; i < enemies.length; i++) {
-		if(enemies[i].bound.position.x < player.bound.position.x){
-				enemies[i].bound.position.x = enemies[i].bound.position.x + enemies[i].bound.velocity;
-		}else{
-				enemies[i].bound.position.x = enemies[i].bound.position.x - enemies[i].bound.velocity;
-		}
+		var deltaX = enemies[i].bound.position.x - player.bound.position.x;
+		var deltaY = enemies[i].bound.position.y - player.bound.position.y;
 	
-		if(enemies[i].bound.position.y < player.bound.position.y){
-				enemies[i].bound.position.y = enemies[i].bound.position.y + enemies[i].bound.velocity;
-		}else{
-				enemies[i].bound.position.y = enemies[i].bound.position.y - enemies[i].bound.velocity;
-		}
+		//if(deltaX > 5){
+			if(enemies[i].bound.position.x < player.bound.position.x){
+					enemies[i].bound.position.x = enemies[i].bound.position.x + enemies[i].bound.velocity;
+			}else{
+					enemies[i].bound.position.x = enemies[i].bound.position.x - enemies[i].bound.velocity;
+			}
+		//}
+	
+		//if(deltaY > 5){
+			if(enemies[i].bound.position.y < player.bound.position.y){
+					enemies[i].bound.position.y = enemies[i].bound.position.y + enemies[i].bound.velocity;
+			}else{
+					enemies[i].bound.position.y = enemies[i].bound.position.y - enemies[i].bound.velocity;
+			}
+		//}
 	}
 }
 
