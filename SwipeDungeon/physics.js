@@ -10,13 +10,13 @@ function receiveInput(player, swipes){
 }
 
 function updatePlayerPosition(player){
-	if(player.jump.targets.length != 0){
-
-	}
-	if(player.jump.currentTarget.x != -1 && game.player.jump.currentTarget.y != -1){
-		player.bound.position.x -= parseInt((player.bound.position.x - player.jump.currentTarget.x)/3);
-		player.bound.position.y -= (player.bound.position.y - player.jump.currentTarget.y)/3;
-	}
+	// if(player.jump.targets.length != 0){
+	//
+	// }
+	// if(player.jump.currentTarget.x != -1 && game.player.jump.currentTarget.y != -1){
+	// 	player.bound.position.x -= parseInt((player.bound.position.x - player.jump.currentTarget.x)/3);
+	// 	player.bound.position.y -= (player.bound.position.y - player.jump.currentTarget.y)/3;
+	// }
 }
 
 function spawnEnemy(enemies){
