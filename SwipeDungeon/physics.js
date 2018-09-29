@@ -23,8 +23,10 @@ function updatePlayerPosition(player){
 }
 
 function spawnEnemy(enemies){
+	var possibleTypes = ["SIMPLE"];
 	if (enemies.length <= game.constants.enemySpawnRate) {
-		var enemy = {bound: {position: {x: Math.random() * 500, y: Math.random() * 500}, size: {x:20, y:20}, velocity: Math.random()*2 + 1}};
+		var currType = possibleTypes[Math.floor(Math.random()*possibleTypes.length)];
+		var enemy = {type: currType, bound: {position: {x: Math.random() * 500, y: Math.random() * 500}, size: {x:20, y:20}, velocity: Math.random()*2 + 1}};
 		enemies.push(enemy);
 	}
 }
@@ -54,7 +56,7 @@ function checkCollisions(player, enemies){
 					if(deltaY < 0){ //nudging left
 						enemies[j].bound.position.y = enemies[i].bound.position.y - enemies[j].bound.size.y;
 					}else{ //nudge right
-						enemies[j].bound.position.y = enemies[i].bound.position.xy+ enemies[j].bound.size.y;
+						enemies[j].bound.position.y = enemies[i].bound.position.y + enemies[j].bound.size.y;
 					}
 				}
 			}
@@ -77,25 +79,32 @@ function updateEnemies(player, enemies){
 	//There is more freedom here to have fun with the enemy AI.
 	//You could just have each enemy move straight towards the player.
 	//Return nothing.
-	for(var i = 0; i < enemies.length; i++) {
-		var deltaX = enemies[i].bound.position.x - player.bound.position.x;
-		var deltaY = enemies[i].bound.position.y - player.bound.position.y;
-	
-		//if(deltaX > 5){
-			if(enemies[i].bound.position.x < player.bound.position.x){
-					enemies[i].bound.position.x = enemies[i].bound.position.x + enemies[i].bound.velocity;
-			}else{
-					enemies[i].bound.position.x = enemies[i].bound.position.x - enemies[i].bound.velocity;
+
+	for(var i = 0; i < enemies.length; i++){
+		if(enemies[i].type == "SIMPLE"){
+			for(var i = 0; i < enemies.length; i++) {
+				var deltaX = enemies[i].bound.position.x - player.bound.position.x;
+				var deltaY = enemies[i].bound.position.y - player.bound.position.y;
+			
+				//if(deltaX > 5){
+					if(enemies[i].bound.position.x < player.bound.position.x){
+							enemies[i].bound.position.x = enemies[i].bound.position.x + enemies[i].bound.velocity;
+					}else{
+							enemies[i].bound.position.x = enemies[i].bound.position.x - enemies[i].bound.velocity;
+					}
+				//}
+			
+				//if(deltaY > 5){
+					if(enemies[i].bound.position.y < player.bound.position.y){
+							enemies[i].bound.position.y = enemies[i].bound.position.y + enemies[i].bound.velocity;
+					}else{
+							enemies[i].bound.position.y = enemies[i].bound.position.y - enemies[i].bound.velocity;
+					}
+				//}
 			}
-		//}
-	
-		//if(deltaY > 5){
-			if(enemies[i].bound.position.y < player.bound.position.y){
-					enemies[i].bound.position.y = enemies[i].bound.position.y + enemies[i].bound.velocity;
-			}else{
-					enemies[i].bound.position.y = enemies[i].bound.position.y - enemies[i].bound.velocity;
-			}
-		//}
+		}else if(enemies[i].type == "GHOST"){
+			enemies[i].bound.position.x++;
+		}
 	}
 }
 
