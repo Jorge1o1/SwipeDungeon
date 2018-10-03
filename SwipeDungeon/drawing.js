@@ -27,7 +27,9 @@ function drawUI(){
 	for (var i = Math.random() * 6 + 1; i > 0; i--) {
 	 	ctx.filledArc(Math.random(),Math.random(),50,0,2*Math.PI);
 	}*/
+	
+	if (game.player.health != 0){
 	ctx.fillStyle = "red";
     ctx.fillRect(200, 10, game.player.health*5, 5);
-	
+	}
 }
