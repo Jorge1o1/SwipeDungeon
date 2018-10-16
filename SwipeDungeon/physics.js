@@ -1,32 +1,11 @@
-function receiveInput(){
+function receiveInput(player, swipes){
 	//This function is triggered when the player releases a swipe.
 	//Take in game, the game state, and swipe, a vector, and move the player in that direction at a fixed speed (player.constants.speed).
 	//Return nothing.
 
-	game.player.state = 1;
-
-	//console.log(game.testPoints);
-
-	var splitIndexes = [];
-	var splitStart = 0;
-	for (var i = 2; i < game.touchPoints.length; i++) {
-		var deltaX = game.touchPoints[i].x - game.touchPoints[i-1].x;
-		var deltaY = game.touchPoints[i].y - game.touchPoints[i-1].y;
-
-		var deltaX_prev = game.touchPoints[i-1].x - game.touchPoints[i-2].x;
-		var deltaY_prev = game.touchPoints[i-1].y - game.touchPoints[i-2].y;
-
-		if(deltaX/Math.abs(deltaX) != deltaX_prev/Math.abs(deltaX_prev)|| deltaY/Math.abs(deltaY) != deltaY_prev/Math.abs(deltaY_prev)){
-			splitIndexes.push([splitStart, i]);
-			splitStart = i + 1;
-		}
-	}
-	//console.log(splitIndexes);
-
-	//player.jump.currentTarget.x = player.bound.position.x + swipes.x;
-	//player.jump.currentTarget.y = player.bound.position.y + swipes.y;
-
-	game.touchPoints = [];
+	player.state = 1;
+	player.jump.currentTarget.x = player.bound.position.x + swipes.x;
+	player.jump.currentTarget.y = player.bound.position.y + swipes.y;
 
 }
 
