@@ -26,7 +26,7 @@ function spawnEnemy(enemies){
 	var possibleTypes = ["SIMPLE"];
 	if (enemies.length <= game.constants.enemySpawnRate) {
 		var currType = possibleTypes[Math.floor(Math.random()*possibleTypes.length)];
-		var enemy = {type: currType, bound: {position: {x: Math.random() * 500, y: Math.random() * 500}, size: {x:20, y:20}, velocity: Math.random()*2 + 1}};
+		var enemy = {type: currType, bound: {position: {x: Math.random() * 500, y: Math.random() * 500}, size: {x:50, y:50}, velocity: Math.random()*2 + 1}};
 		enemies.push(enemy);
 	}
 }
@@ -68,7 +68,17 @@ function checkCollisions(player, enemies){
 		 	if(player.state == 0){ //not jumping (enemy hurts player)		
 		 		game.player.health--;
 		 	}else{ //jumping (player hurts enemy)
-		 		enemies.splice(i, 1);
+		 		if(enemies[i].type=="SIMPLE"){
+					var currX = enemies[i].bound.position.x;
+					var currY = enemies[i].bound.position.y;
+					enemies.splice(i, 1);
+					for (var i = 0; i < 5; i++) {
+						var enemy = {type: "MIN", bound: {position: {x: currX + Math.random() * 10, y: currY + Math.random() * 10}, size: {x:20, y:20}, velocity: Math.random()*2 + 1}};
+					enemies.push(enemy);
+					}
+		 		} else {
+		 			enemies.splice(i, 1);
+		 		}
 		 	}
 	 	}
 	}
@@ -81,7 +91,7 @@ function updateEnemies(player, enemies){
 	//Return nothing.
 
 	for(var i = 0; i < enemies.length; i++){
-		if(enemies[i].type == "SIMPLE"){
+		if(enemies[i].type == "SIMPLE" || enemies[i].type == "MIN"){
 			for(var i = 0; i < enemies.length; i++) {
 				var deltaX = enemies[i].bound.position.x - player.bound.position.x;
 				var deltaY = enemies[i].bound.position.y - player.bound.position.y;
