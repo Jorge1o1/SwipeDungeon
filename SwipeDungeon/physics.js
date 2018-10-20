@@ -29,6 +29,7 @@ function spawnEnemy(enemies){
 		var enemy = {type: currType, bound: {position: {x: Math.random() * 500, y: Math.random() * 500}, size: {x:50, y:50}, velocity: Math.random()*2 + 1}};
 		enemies.push(enemy);
 	}
+	
 }
 
 function checkCollisions(player, enemies){
@@ -79,6 +80,7 @@ function checkCollisions(player, enemies){
 		 		} else {
 		 			enemies.splice(i, 1);
 		 		}
+		
 		 	}
 	 	}
 	}
