@@ -114,6 +114,7 @@ function updateEnemies(player, enemies){
 					}
 				//}
 			}
+	
 		}else if(enemies[i].type == "GHOST"){
 			enemies[i].bound.position.x++;
 		}
@@ -129,3 +130,29 @@ function updateFX(){
 	//Calculate where any FX particles should go.
 
 }
+
+}else{
+				if(enemies[i].type == "Archer"){
+					for(var i = 0; i < enemies.length; i++) {
+						var deltaX = enemies[i].bound.position.x - player.bound.position.x;
+						var deltaY = enemies[i].bound.position.y - player.bound.position.y;
+						enemies[i].bound.velocity = 1;
+			
+				//if(deltaX > 5){
+					if(deltaX < 100 && deltaX > 5){
+							enemies[i].bound.position.x = enemies[i].bound.position.x + enemies[i].bound.velocity;
+					}else if (deltaX > -100 && deltaX < -5){
+							enemies[i].bound.position.x = enemies[i].bound.position.x - enemies[i].bound.velocity;
+					}
+					else {enemies[i].bound.position.x = enemies[i].bound.position.x;}
+				}
+			
+				//if(deltaY > 5){
+					if(deltaY < 100 && deltaY > 5){
+							enemies[i].bound.position.y = enemies[i].bound.position.y + enemies[i].bound.velocity;
+					}else if (deltaY > -100 && deltaY < -5){
+							enemies[i].bound.position.y = enemies[i].bound.position.y - enemies[i].bound.velocity;
+					}
+					else {enemies[i].bound.position.y = enemies[i].bound.position.y;}
+				}
+			}	
