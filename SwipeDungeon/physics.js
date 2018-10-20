@@ -23,10 +23,14 @@ function updatePlayerPosition(player){
 }
 
 function spawnEnemy(enemies){
-	var possibleTypes = ["BIG"];
+	var possibleTypes = ["BIG", "GOHST"];
+	var currType = possibleTypes[Math.floor(Math.random()*possibleTypes.length)];
 	if (enemies.length <= game.constants.enemySpawnRate) {
-		var currType = possibleTypes[Math.floor(Math.random()*possibleTypes.length)];
-		var enemy = {type: currType, bound: {position: {x: Math.random() * 500, y: Math.random() * 500}, size: {x:50, y:50}, velocity: Math.random()*2 + 1}};
+		var enemy = {type: currType, bound: {position: {x: Math.random() * 500, y: Math.random() * 500}, size: {x: 25, y: 25}, velocity: Math.random()*2 + 1}};
+		if (enemy.type == "BIG") {
+			enemy.bound.size.x = 50;
+			enemy.bound.size.y = 50;
+		}
 		enemies.push(enemy);
 	}
 	

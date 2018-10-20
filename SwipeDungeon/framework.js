@@ -16,7 +16,7 @@ var FRAMEWORK_CONSTANTS = {
 var game = {
 	tick: 0, //do not modify
 	constants:{
-		enemySpawnRate: 20,
+		enemySpawnRate: 60,
 		friction: 0.998
 	},
 	player: {
