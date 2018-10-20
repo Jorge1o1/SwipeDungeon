@@ -23,7 +23,7 @@ function updatePlayerPosition(player){
 }
 
 function spawnEnemy(enemies){
-	var possibleTypes = ["SIMPLE"];
+	var possibleTypes = ["BIG"];
 	if (enemies.length <= game.constants.enemySpawnRate) {
 		var currType = possibleTypes[Math.floor(Math.random()*possibleTypes.length)];
 		var enemy = {type: currType, bound: {position: {x: Math.random() * 500, y: Math.random() * 500}, size: {x:50, y:50}, velocity: Math.random()*2 + 1}};
@@ -69,7 +69,7 @@ function checkCollisions(player, enemies){
 		 	if(player.state == 0){ //not jumping (enemy hurts player)		
 		 		game.player.health--;
 		 	}else{ //jumping (player hurts enemy)
-		 		if(enemies[i].type=="SIMPLE"){
+		 		if(enemies[i].type=="BIG"){
 					var currX = enemies[i].bound.position.x;
 					var currY = enemies[i].bound.position.y;
 					enemies.splice(i, 1);
@@ -93,7 +93,7 @@ function updateEnemies(player, enemies){
 	//Return nothing.
 
 	for(var i = 0; i < enemies.length; i++){
-		if(enemies[i].type == "SIMPLE" || enemies[i].type == "MIN"){
+		if(enemies[i].type == "GOHST" || enemies[i].type == "MIN" || enemies[i].type == "BIG"){
 			for(var i = 0; i < enemies.length; i++) {
 				var deltaX = enemies[i].bound.position.x - player.bound.position.x;
 				var deltaY = enemies[i].bound.position.y - player.bound.position.y;
@@ -115,8 +115,6 @@ function updateEnemies(player, enemies){
 				//}
 			}
 	
-		}else if(enemies[i].type == "GHOST"){
-			enemies[i].bound.position.x++;
 		}
 	}
 }
@@ -130,29 +128,3 @@ function updateFX(){
 	//Calculate where any FX particles should go.
 
 }
-
-}else{
-				if(enemies[i].type == "Archer"){
-					for(var i = 0; i < enemies.length; i++) {
-						var deltaX = enemies[i].bound.position.x - player.bound.position.x;
-						var deltaY = enemies[i].bound.position.y - player.bound.position.y;
-						enemies[i].bound.velocity = 1;
-			
-				//if(deltaX > 5){
-					if(deltaX < 100 && deltaX > 5){
-							enemies[i].bound.position.x = enemies[i].bound.position.x + enemies[i].bound.velocity;
-					}else if (deltaX > -100 && deltaX < -5){
-							enemies[i].bound.position.x = enemies[i].bound.position.x - enemies[i].bound.velocity;
-					}
-					else {enemies[i].bound.position.x = enemies[i].bound.position.x;}
-				}
-			
-				//if(deltaY > 5){
-					if(deltaY < 100 && deltaY > 5){
-							enemies[i].bound.position.y = enemies[i].bound.position.y + enemies[i].bound.velocity;
-					}else if (deltaY > -100 && deltaY < -5){
-							enemies[i].bound.position.y = enemies[i].bound.position.y - enemies[i].bound.velocity;
-					}
-					else {enemies[i].bound.position.y = enemies[i].bound.position.y;}
-				}
-			}	
