@@ -4,8 +4,16 @@ function drawAssets(){
 	ctx.fillStyle = "black";
 	ctx.fillRect(game.player.bound.position.x, game.player.bound.position.y, game.player.bound.size.x, game.player.bound.size.y);
 	for (var i = game.enemies.length - 1; i >= 0; i--) {
-		ctx.fillStyle = "red";
-		ctx.fillRect(game.enemies[i].bound.position.x, game.enemies[i].bound.position.y, game.enemies[i].bound.size.x, game.enemies[i].bound.size.y);
+		if (game.enemies[i].type == "GHOST") {
+			ctx.fillStyle = "red";
+			ctx.fillRect(game.enemies[i].bound.position.x, game.enemies[i].bound.position.y, game.enemies[i].bound.size.x, game.enemies[i].bound.size.y);
+		} else if (game.enemies[i].type == "BIG") {
+			ctx.fillStyle = "green";
+			ctx.fillRect(game.enemies[i].bound.position.x, game.enemies[i].bound.position.y, game.enemies[i].bound.size.x, game.enemies[i].bound.size.y);
+		} else {
+			ctx.fillStyle = "blue";
+			ctx.fillRect(game.enemies[i].bound.position.x, game.enemies[i].bound.position.y, game.enemies[i].bound.size.x, game.enemies[i].bound.size.y);
+		}
 	}
 
 }

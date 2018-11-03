@@ -10,6 +10,7 @@ document.getElementById("myCanvas").addEventListener("touchend", function(event)
 document.getElementById("myCanvas").addEventListener("mousemove", function(event) {handleInput(0, 0, event);});
 document.getElementById("myCanvas").addEventListener("touchmove", function(event) {handleInput(1, 0, event);});
 
+
 var FRAMEWORK_CONSTANTS = {
 	FPS: 60,
 	running: true,
@@ -22,7 +23,7 @@ var game = {
 	touchDown: false,
 	touchPoints:[],
 	constants:{
-		enemySpawnRate: 50,
+		enemySpawnRate: 60,
 		friction: 0.998
 	},
 	player: {
