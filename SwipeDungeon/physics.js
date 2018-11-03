@@ -5,29 +5,50 @@ function receiveInput(){
 
 	game.player.state = 1;
 
-	//console.log(game.testPoints);
+	console.log(game.touchPoints);
 
+	var touchPoints = keepEveryNth(game.touchPoints, Math.floor(game.touchPoints.length/5));
+	
 	var splitIndexes = [];
 	var splitStart = 0;
-	for (var i = 2; i < game.touchPoints.length; i++) {
-		var deltaX = game.touchPoints[i].x - game.touchPoints[i-1].x;
-		var deltaY = game.touchPoints[i].y - game.touchPoints[i-1].y;
+	for (var i = 2; i < touchPoints.length; i++) {
+		var deltaX = touchPoints[i].x - touchPoints[i-1].x;
+		var deltaY = touchPoints[i].y - touchPoints[i-1].y;
 
-		var deltaX_prev = game.touchPoints[i-1].x - game.touchPoints[i-2].x;
-		var deltaY_prev = game.touchPoints[i-1].y - game.touchPoints[i-2].y;
+		var deltaX_prev = touchPoints[i-1].x - touchPoints[i-2].x;
+		var deltaY_prev = touchPoints[i-1].y - touchPoints[i-2].y;
 
-		if(deltaX/Math.abs(deltaX) != deltaX_prev/Math.abs(deltaX_prev)|| deltaY/Math.abs(deltaY) != deltaY_prev/Math.abs(deltaY_prev)){
+		if(getSign(deltaX) != getSign(deltaX_prev) || getSign(deltaY) != getSign(deltaY_prev)){
+			console.log("FRAME: " + i + " DELTAXSign:" + getSign(deltaX) + " DELTAXPrevSign: " + getSign(deltaX_prev) + " DELTAYSign: " + getSign(deltaY) + " DELTAYPrevSign: " + getSign(deltaY_prev));
 			splitIndexes.push([splitStart, i]);
-			splitStart = i + 1;
+			splitStart = i;
 		}
 	}
-	//console.log(splitIndexes);
+	splitIndexes.push([splitStart, game.touchPoints.length]);
+	console.log(splitIndexes);
+	for(var i = 0; i < splitIndexes.length; i++){
+		
+	}
 
 	//player.jump.currentTarget.x = player.bound.position.x + swipes.x;
 	//player.jump.currentTarget.y = player.bound.position.y + swipes.y;
 
 	game.touchPoints = [];
 
+}
+
+function keepEveryNth(array, n){
+	var arr = [];
+	for(var i = 0; i < array.length; i++){
+		if(i % n == 0) arr.push(array[i]);
+	}
+	return arr;
+
+}
+
+function getSign(num){
+	if(num == 0) return 1;
+	return num/Math.abs(num);
 }
 
 function updatePlayerPosition(player){

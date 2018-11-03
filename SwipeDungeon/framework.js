@@ -1,10 +1,14 @@
 var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
 
-document.getElementById("myCanvas").addEventListener("ondrag", function(event) {handleInput(0, 0, event);});
+document.getElementById("myCanvas").addEventListener("mousedown", function(event) {game.touchDown = true;});
+document.getElementById("myCanvas").addEventListener("mouseup", function(event) {game.touchDown = false; handleInput(0, 1, event);});
+
+document.getElementById("myCanvas").addEventListener("touchstart", function(event) {game.touchDown = true;});
+document.getElementById("myCanvas").addEventListener("touchend", function(event) {game.touchDown = false; handleInput(1, 1, event);});
+
+document.getElementById("myCanvas").addEventListener("mousemove", function(event) {handleInput(0, 0, event);});
 document.getElementById("myCanvas").addEventListener("touchmove", function(event) {handleInput(1, 0, event);});
-document.getElementById("myCanvas").addEventListener("ondrag", function(event) {handleInput(0, 1, event);});
-document.getElementById("myCanvas").addEventListener("touchend", function(event) {handleInput(0, 1, event);});
 
 var FRAMEWORK_CONSTANTS = {
 	FPS: 60,
@@ -15,6 +19,7 @@ var FRAMEWORK_CONSTANTS = {
 //FOR REFERENCE:
 var game = {
 	tick: 0, //do not modify
+	touchDown: false,
 	touchPoints:[],
 	constants:{
 		enemySpawnRate: 50,
@@ -78,19 +83,22 @@ function handleInput(type, action, e){ //function optimized for portability; run
 		//handle computer input
 		if(action == 0){
 			//handle mousemove
-			console.log("DRAGGING");
-			game.touchPoints.push({x: e.clientX, y: e.clientY});
+			if(game.touchDown){
+				game.touchPoints.push({x: e.clientX, y: e.clientY});
+			}
 		}else{
 			//handle mouseup
+			console.log("COMPUTER MOUSEUP");
 			receiveInput();
 		}
 	}else{
 		//handle mobile input - NOTE: THIS HAS NOT BEEN UNIT TESTED YET
 		if(action == 0){
 			//handle mousemove
-			game.touchPoints.push({x: e.touches[0].pageX, y: e.touches[0].pageY});
+			if(game.touchDown) game.touchPoints.push({x: e.touches[0].pageX, y: e.touches[0].pageY});
 		}else{
 			//handle mouseup
+			console.log("IOS MOUSEUP");
 			receiveInput();
 		}
 	}
