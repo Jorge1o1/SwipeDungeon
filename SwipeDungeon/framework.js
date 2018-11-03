@@ -52,6 +52,7 @@ var game = {
 		state: 0 //0 is normal, 1 is jumping
 	},
 	enemies: [],
+	projectiles: [],
 	mouse: {
 		start:{
 			x: -1,
