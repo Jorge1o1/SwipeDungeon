@@ -68,10 +68,11 @@ function spawnEnemy(enemies){
 	var possibleTypes = ["BIG", "GHOST"];
 	var currType = possibleTypes[Math.floor(Math.random()*possibleTypes.length)];
 	if (enemies.length <= game.constants.enemySpawnRate) {
-		var enemy = {type: currType, bound: {position: {x: Math.random() * 500, y: Math.random() * 500}, size: {x: 25, y: 25}, velocity: Math.random()*2 + 1}};
+		var enemy = {type: currType, bound: {position: {x: Math.random() * 500, y: Math.random() * 500}, size: {x: 25, y: 25}, velocity: Math.random()*2 + 1, health: 1, hidden: {counter: 0, active: false}}};
 		if (enemy.type == "BIG") {
 			enemy.bound.size.x = 50;
 			enemy.bound.size.y = 50;
+			enemy.bound.health = 3;
 		}
 		enemies.push(enemy);
 	}
@@ -115,18 +116,22 @@ function checkCollisions(player, enemies){
 		 	if(player.state == 0){ //not jumping (enemy hurts player)		
 		 		game.player.health--;
 		 	}else{ //jumping (player hurts enemy)
-		 		if(enemies[i].type=="BIG"){
-					var currX = enemies[i].bound.position.x;
-					var currY = enemies[i].bound.position.y;
-					enemies.splice(i, 1);
-					for (var i = 0; i < 5; i++) {
-						var enemy = {type: "MIN", bound: {position: {x: currX + Math.random() * 10, y: currY + Math.random() * 10}, size: {x:20, y:20}, velocity: Math.random()*2 + 1}};
-					enemies.push(enemy);
-					}
+		 		if (enemies[i].bound.health == 0){
+			 		if(enemies[i].type=="BIG"){
+						var currX = enemies[i].bound.position.x;
+						var currY = enemies[i].bound.position.y;
+
+						enemies.splice(i, 1);
+						for (var i = 0; i < 5; i++) {
+							var enemy = {type: "MIN", bound: {position: {x: currX + Math.random() * 10, y: currY + Math.random() * 10}, size: {x:20, y:20}, velocity: 4, health: 1, hidden: {counter: 0, active: false}}};
+						enemies.push(enemy);
+						}
+		 			} else {
+		 				enemies.splice(i, 1);
+		 			}
 		 		} else {
-		 			enemies.splice(i, 1);
-		 		}
-		
+		 			enemies[i].bound.health-=1;
+		 		}	
 		 	}
 	 	}
 	}
@@ -154,10 +159,25 @@ function updateEnemies(player, enemies){
 							enemies[i].bound.position.y = enemies[i].bound.position.y + enemies[i].bound.velocity;
 					}else{
 							enemies[i].bound.position.y = enemies[i].bound.position.y - enemies[i].bound.velocity;
-					}
+					}	
+			if(enemies[i].bound.hidden.active == false && enemies[i].type == "GHOST") {
+			enemies[i].bound.hidden.counter += 1;
+			if(enemies[i].bound.hidden.counter == 100) {
+				enemies[i].bound.hidden.active = true;
+				enemies[i].bound.hidden.counter = 0;
+			}
+		} else if (enemies[i].bound.hidden.active == true && enemies[i].type == "GHOST"){
+			enemies[i].bound.hidden.counter += 1;
+			if(enemies[i].bound.hidden.counter == 75) {
+				enemies[i].bound.hidden.active = false;
+				enemies[i].bound.hidden.counter = 0;
+			}
+		}
 			}
 	
 		}
+
+
 	}
 }
 
