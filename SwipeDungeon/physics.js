@@ -65,7 +65,7 @@ function updatePlayerPosition(player){
 }
 
 function spawnEnemy(enemies){
-	var possibleTypes = ["BIG", "GHOST"];
+	var possibleTypes = ["BIG", "GHOST", "Archer"];
 	var currType = possibleTypes[Math.floor(Math.random()*possibleTypes.length)];
 	if (enemies.length <= game.constants.enemySpawnRate) {
 		var enemy = {type: currType, bound: {position: {x: Math.random() * 500, y: Math.random() * 500}, size: {x: 25, y: 25}, velocity: Math.random()*2 + 1, health: 1, hidden: {counter: 0, active: false}}};
@@ -176,8 +176,19 @@ function updateEnemies(player, enemies){
 			}
 	
 		}
+<<<<<<< HEAD
 
 
+=======
+		else if (enemies[i].type == "Archer") {
+			var deltaX = enemies[i].bound.position.x - player.bound.position.x;
+		    var deltaY = enemies[i].bound.position.y - player.bound.position.y;
+			if (Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)) < 250){
+                                  enemies[i].bound.position.x = enemies[i].bound.position.x + 2*(deltaX/Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)))*enemies[i].bound.velocity;
+                                  enemies[i].bound.position.y = enemies[i].bound.position.y + 2*(deltaY/Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)))*enemies[i].bound.velocity;
+                                 }
+		}
+>>>>>>> 4d2f73055623d091fdb1919164ad048e5a3e6ffa
 	}
 }
 
