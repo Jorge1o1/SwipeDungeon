@@ -4,17 +4,21 @@ function drawAssets(){
 	ctx.fillStyle = "black";
 	ctx.fillRect(game.player.bound.position.x, game.player.bound.position.y, game.player.bound.size.x, game.player.bound.size.y);
 	for (var i = game.enemies.length - 1; i >= 0; i--) {
-		if (game.enemies[i].type == "GHOST") {
+		if (game.enemies[i].type == "Ghost") {
 			if(game.enemies[i].bound.hidden.active == false) {
 				ctx.fillStyle = "red";
 			} else if (game.enemies[i].bound.hidden.active == true){
 				ctx.fillStyle = "grey";
 			}
 			ctx.fillRect(game.enemies[i].bound.position.x, game.enemies[i].bound.position.y, game.enemies[i].bound.size.x, game.enemies[i].bound.size.y);
-		} else if (game.enemies[i].type == "BIG") {
+		} else if (game.enemies[i].type == "Burst") {
 			ctx.fillStyle = "green";
 			ctx.fillRect(game.enemies[i].bound.position.x, game.enemies[i].bound.position.y, game.enemies[i].bound.size.x, game.enemies[i].bound.size.y);
-		} else {
+		} else if (game.enemies[i].type == "Archer") {
+			ctx.fillStyle = "yellow";
+			ctx.fillRect(game.enemies[i].bound.position.x, game.enemies[i].bound.position.y, game.enemies[i].bound.size.x, game.enemies[i].bound.size.y);
+		} else { 
+			// Make misc blue (atm. Popped)
 			ctx.fillStyle = "blue";
 			ctx.fillRect(game.enemies[i].bound.position.x, game.enemies[i].bound.position.y, game.enemies[i].bound.size.x, game.enemies[i].bound.size.y);
 		}

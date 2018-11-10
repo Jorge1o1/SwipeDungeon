@@ -65,11 +65,20 @@ function updatePlayerPosition(player){
 }
 
 function spawnEnemy(enemies){
-	var possibleTypes = ["BIG", "GHOST", "Archer"];
-	var currType = possibleTypes[Math.floor(Math.random()*possibleTypes.length)];
+	var types = ["Burst", "Ghost", "Archer"];
+	var currType = types[Math.floor(Math.random()*types.length)];
 	if (enemies.length <= game.constants.enemySpawnRate) {
-		var enemy = {type: currType, bound: {position: {x: Math.random() * 500, y: Math.random() * 500}, size: {x: 25, y: 25}, velocity: Math.random()*2 + 1, health: 1, hidden: {counter: 0, active: false}}};
-		if (enemy.type == "BIG") {
+		var enemy = {
+			type: currType, 
+			bound: {
+				position: {x: Math.random() * 500, y: Math.random() * 500},
+				size: {x: 25, y: 25}, 
+				velocity: Math.random()*2 + 1, 
+				health: 1, 
+				hidden: {counter: 0, active: false}
+			}
+		};
+		if (enemy.type == "Burst") {
 			enemy.bound.size.x = 50;
 			enemy.bound.size.y = 50;
 			enemy.bound.health = 3;
@@ -85,11 +94,11 @@ function checkCollisions(player, enemies){
 	//If not and player and enemies have collided, player takes damage.
 	//Return nothing.
 
-
 	for(var i = 0; i < enemies.length; i++){
 		for(var j = i+1; j < enemies.length; j++){
+			if(enemies[i].type != "Archer"){
 			var deltaX = enemies[j].bound.position.x - enemies[i].bound.position.x;
-			var deltaY = enemies[j].bound.position.y - enemies[i].bound.position.y;
+			var deltaY = enemies[j].bound.position.y - enemies[i].bound.position.y;				
 			if(Math.abs(deltaX) < enemies[i].bound.size.x && Math.abs(deltaY) < enemies[i].bound.size.y){
 				//overlapping
 				if(Math.abs(deltaX) > Math.abs(deltaY)){
@@ -110,6 +119,7 @@ function checkCollisions(player, enemies){
 			}
 		}
 	}
+}
 
 	for(var i = 0; i < enemies.length; i++){
 	 	if (Math.abs(enemies[i].bound.position.x - game.player.bound.position.x) < enemies[i].bound.size.x && Math.abs(enemies[i].bound.position. y- game.player.bound.position.y) < enemies[i].bound.size.y){
@@ -117,21 +127,32 @@ function checkCollisions(player, enemies){
 		 		game.player.health--;
 		 	}else{ //jumping (player hurts enemy)
 		 		if (enemies[i].bound.health == 0){
-			 		if(enemies[i].type=="BIG"){
+			 		if(enemies[i].type=="Burst"){
 						var currX = enemies[i].bound.position.x;
 						var currY = enemies[i].bound.position.y;
 
 						enemies.splice(i, 1);
 						for (var i = 0; i < 5; i++) {
-							var enemy = {type: "MIN", bound: {position: {x: currX + Math.random() * 10, y: currY + Math.random() * 10}, size: {x:20, y:20}, velocity: 4, health: 1, hidden: {counter: 0, active: false}}};
+							var enemy = {
+							type: "Popped", 
+							bound: {
+								position: {x: currX + Math.random() * 10, y: currY + Math.random() * 10},
+								size: {x:20, y:20}, 
+								velocity: 4, 
+								health: 1, 
+								hidden: {counter: 0, active: false}
+							}
+						};
 						enemies.push(enemy);
 						}
 		 			} else {
 		 				enemies.splice(i, 1);
 		 			}
-		 		} else {
+		 		} else if (enemies[i].type == "Ghost" && enemies[i].bound.hidden.active == false){
+		 			enemies[i].bound.health-=1;	
+		 		} else if (enemies[i].type != "Ghost"){
 		 			enemies[i].bound.health-=1;
-		 		}	
+		 		}
 		 	}
 	 	}
 	}
@@ -144,7 +165,7 @@ function updateEnemies(player, enemies){
 	//Return nothing.
 
 	for(var i = 0; i < enemies.length; i++){
-		if(enemies[i].type == "GHOST" || enemies[i].type == "MIN" || enemies[i].type == "BIG"){
+		if(enemies[i].type == "Ghost" || enemies[i].type == "Popped" || enemies[i].type == "Burst"){
 			for(var i = 0; i < enemies.length; i++) {
 				var deltaX = enemies[i].bound.position.x - player.bound.position.x;
 				var deltaY = enemies[i].bound.position.y - player.bound.position.y;
@@ -160,13 +181,13 @@ function updateEnemies(player, enemies){
 					}else{
 							enemies[i].bound.position.y = enemies[i].bound.position.y - enemies[i].bound.velocity;
 					}	
-			if(enemies[i].bound.hidden.active == false && enemies[i].type == "GHOST") {
+			if(enemies[i].bound.hidden.active == false && enemies[i].type == "Ghost") {
 			enemies[i].bound.hidden.counter += 1;
 			if(enemies[i].bound.hidden.counter == 100) {
 				enemies[i].bound.hidden.active = true;
 				enemies[i].bound.hidden.counter = 0;
 			}
-		} else if (enemies[i].bound.hidden.active == true && enemies[i].type == "GHOST"){
+		} else if (enemies[i].bound.hidden.active == true && enemies[i].type == "Ghost"){
 			enemies[i].bound.hidden.counter += 1;
 			if(enemies[i].bound.hidden.counter == 75) {
 				enemies[i].bound.hidden.active = false;
@@ -175,12 +196,7 @@ function updateEnemies(player, enemies){
 		}
 			}
 	
-		}
-<<<<<<< HEAD
-
-
-=======
-		else if (enemies[i].type == "Archer") {
+		} else if (enemies[i].type == "Archer") {
 			var deltaX = enemies[i].bound.position.x - player.bound.position.x;
 		    var deltaY = enemies[i].bound.position.y - player.bound.position.y;
 			if (Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)) < 250){
@@ -188,7 +204,6 @@ function updateEnemies(player, enemies){
                                   enemies[i].bound.position.y = enemies[i].bound.position.y + 2*(deltaY/Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)))*enemies[i].bound.velocity;
                                  }
 		}
->>>>>>> 4d2f73055623d091fdb1919164ad048e5a3e6ffa
 	}
 }
 
