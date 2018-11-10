@@ -65,7 +65,7 @@ function updatePlayerPosition(player){
 }
 
 function spawnEnemy(enemies){
-	var types = ["Burst", "Ghost", "Archer"];
+	var types = ["Ghost", "Burst","Archer", "Mage"];
 	var currType = types[Math.floor(Math.random()*types.length)];
 	if (enemies.length <= game.constants.enemySpawnRate) {
 		var enemy = {
@@ -85,7 +85,23 @@ function spawnEnemy(enemies){
 		}
 		enemies.push(enemy);
 	}
-	
+	//Spawn Projectile
+	if(game.tick % 100 == 0){
+		for (var i = 0; i < enemies.length; i++) {
+			if(enemies[i].type == "Archer" || enemies[i].type == "Mage") {
+				var enemy = {
+					type: "Projectile", 
+					bound: {
+						position: {x: enemies[i].bound.x + 100, y: enemies[i].bound.y + 100},
+						size: {x: 50, y: 50}, 
+						velocity: Math.random()*2 + 1,
+						health: 1
+					}
+				};	
+				enemies.push(enemy);		
+			}
+		}			
+	}
 }
 
 function checkCollisions(player, enemies){
@@ -96,7 +112,7 @@ function checkCollisions(player, enemies){
 
 	for(var i = 0; i < enemies.length; i++){
 		for(var j = i+1; j < enemies.length; j++){
-			if(enemies[i].type != "Archer"){
+			if(enemies[i].type != "Archer" || enemies[i].type != "Mage"){
 			var deltaX = enemies[j].bound.position.x - enemies[i].bound.position.x;
 			var deltaY = enemies[j].bound.position.y - enemies[i].bound.position.y;				
 			if(Math.abs(deltaX) < enemies[i].bound.size.x && Math.abs(deltaY) < enemies[i].bound.size.y){
@@ -165,8 +181,7 @@ function updateEnemies(player, enemies){
 	//Return nothing.
 
 	for(var i = 0; i < enemies.length; i++){
-		if(enemies[i].type == "Ghost" || enemies[i].type == "Popped" || enemies[i].type == "Burst"){
-			for(var i = 0; i < enemies.length; i++) {
+		if(enemies[i].type != "Archer" && enemies[i].type != "Mage"){
 				var deltaX = enemies[i].bound.position.x - player.bound.position.x;
 				var deltaY = enemies[i].bound.position.y - player.bound.position.y;
 
@@ -181,31 +196,34 @@ function updateEnemies(player, enemies){
 					}else{
 							enemies[i].bound.position.y = enemies[i].bound.position.y - enemies[i].bound.velocity;
 					}	
-			if(enemies[i].bound.hidden.active == false && enemies[i].type == "Ghost") {
-			enemies[i].bound.hidden.counter += 1;
-			if(enemies[i].bound.hidden.counter == 100) {
-				enemies[i].bound.hidden.active = true;
-				enemies[i].bound.hidden.counter = 0;
-			}
-		} else if (enemies[i].bound.hidden.active == true && enemies[i].type == "Ghost"){
-			enemies[i].bound.hidden.counter += 1;
-			if(enemies[i].bound.hidden.counter == 75) {
-				enemies[i].bound.hidden.active = false;
-				enemies[i].bound.hidden.counter = 0;
-			}
-		}
-			}
-	
-		} else if (enemies[i].type == "Archer") {
-			var deltaX = enemies[i].bound.position.x - player.bound.position.x;
-		    var deltaY = enemies[i].bound.position.y - player.bound.position.y;
-			if (Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)) < 250){
-                                  enemies[i].bound.position.x = enemies[i].bound.position.x + 2*(deltaX/Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)))*enemies[i].bound.velocity;
-                                  enemies[i].bound.position.y = enemies[i].bound.position.y + 2*(deltaY/Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)))*enemies[i].bound.velocity;
-                                 }
-		}
-	}
-}
+
+					if(enemies[i].type == "Ghost") {
+						if(enemies[i].bound.hidden.active == true){
+							enemies[i].bound.hidden.counter += 1;
+							if(enemies[i].bound.hidden.counter == 75) {
+								enemies[i].bound.hidden.active = false;
+								enemies[i].bound.hidden.counter = 0;
+							}
+						} else {
+
+						enemies[i].bound.hidden.counter += 1;
+						if(enemies[i].bound.hidden.counter == 100) {
+							enemies[i].bound.hidden.active = true;
+							enemies[i].bound.hidden.counter = 0;
+						}
+					}
+				} 
+			
+		} else {
+				var deltaX = enemies[i].bound.position.x - player.bound.position.x;
+				var deltaY = enemies[i].bound.position.y - player.bound.position.y;
+				if (Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)) < 250){
+					enemies[i].bound.position.x = enemies[i].bound.position.x + 2*(deltaX/Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)))*enemies[i].bound.velocity;
+                    enemies[i].bound.position.y = enemies[i].bound.position.y + 2*(deltaY/Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)))*enemies[i].bound.velocity;
+                }
+            }
+        }
+    }
 
 function spawnParticles(x, y, particleSize, color, amount){
 	//

@@ -14,7 +14,7 @@ function drawAssets(){
 		} else if (game.enemies[i].type == "Burst") {
 			ctx.fillStyle = "green";
 			ctx.fillRect(game.enemies[i].bound.position.x, game.enemies[i].bound.position.y, game.enemies[i].bound.size.x, game.enemies[i].bound.size.y);
-		} else if (game.enemies[i].type == "Archer") {
+		} else if (game.enemies[i].type == "Mage") {
 			ctx.fillStyle = "yellow";
 			ctx.fillRect(game.enemies[i].bound.position.x, game.enemies[i].bound.position.y, game.enemies[i].bound.size.x, game.enemies[i].bound.size.y);
 		} else { 
