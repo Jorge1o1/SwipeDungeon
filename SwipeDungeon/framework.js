@@ -1,15 +1,10 @@
 var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
 
-document.getElementById("myCanvas").addEventListener("mousedown", function(event) {game.touchDown = true;});
-document.getElementById("myCanvas").addEventListener("mouseup", function(event) {game.touchDown = false; handleInput(0, 1, event);});
-
-document.getElementById("myCanvas").addEventListener("touchstart", function(event) {game.touchDown = true;});
-document.getElementById("myCanvas").addEventListener("touchend", function(event) {game.touchDown = false; handleInput(1, 1, event);});
-
-document.getElementById("myCanvas").addEventListener("mousemove", function(event) {handleInput(0, 0, event);});
+document.getElementById("myCanvas").addEventListener("mousedown", function(event) {handleInput(0, 0, event);});
 document.getElementById("myCanvas").addEventListener("touchmove", function(event) {handleInput(1, 0, event);});
-
+document.getElementById("myCanvas").addEventListener("mouseup", function(event) {handleInput(0, 1, event);});
+document.getElementById("myCanvas").addEventListener("touchend", function(event) {handleInput(0, 1, event);});
 
 var FRAMEWORK_CONSTANTS = {
 	FPS: 60,
@@ -20,10 +15,8 @@ var FRAMEWORK_CONSTANTS = {
 //FOR REFERENCE:
 var game = {
 	tick: 0, //do not modify
-	touchDown: false,
-	touchPoints:[],
 	constants:{
-		enemySpawnRate: 60,
+		enemySpawnRate: 50,
 		friction: 0.998
 	},
 	player: {
@@ -41,8 +34,8 @@ var game = {
 		},
 		bound:{
 			position:{
-				x: 500,
-				y: 500
+				x: 0,
+				y: 0
 			},
 			size:{
 				x:20,
@@ -52,7 +45,6 @@ var game = {
 		state: 0 //0 is normal, 1 is jumping
 	},
 	enemies: [],
-	projectiles: [],
 	mouse: {
 		start:{
 			x: -1,
@@ -85,28 +77,33 @@ function handleInput(type, action, e){ //function optimized for portability; run
 		//handle computer input
 		if(action == 0){
 			//handle mousemove
-			if(game.touchDown){
-				game.touchPoints.push({x: e.clientX, y: e.clientY});
+			if(game.mouse.start.x == -1 && game.mouse.start.y == -1){
+				game.mouse.start = {x: e.clientX, y: e.clientY};
 			}
 		}else{
 			//handle mouseup
-			console.log("COMPUTER MOUSEUP");
-			receiveInput();
+			var swipe = {x: (e.clientX - game.mouse.start.x), y: (e.clientY - game.mouse.start.y)};
+			game.mouse.start = {x: -1, y: -1};
+			receiveInput(game.player, swipe);
 		}
 	}else{
 		//handle mobile input - NOTE: THIS HAS NOT BEEN UNIT TESTED YET
 		if(action == 0){
-			//handle mousemove
-			if(game.touchDown) game.touchPoints.push({x: e.touches[0].pageX, y: e.touches[0].pageY});
+			//handle touchmove
+			if(game.mouse.start.x == -1 && game.mouse.start.y == -1){
+				game.mouse.start = {x: e.touches[0].pageX, y: e.touches[0].pageY};
+			}
+
 		}else{
-			//handle mouseup
-			console.log("IOS MOUSEUP");
-			receiveInput();
+			//handle touchup
+			var swipe = {x: (e.touches[0].pageX - game.mouse.start.x), y: (e.touches[0].pageY - game.mouse.start.y)};
+			game.mouse.start = {x: -1, y: -1};
+			receiveInput(game.player, swipe);
 		}
 	}
 }
 
-window.setInterval(function(){if(FRAMEWORK_CONSTANTS.running){handlePhysics(); handleDrawing();}}, (1000/FRAMEWORK_CONSTANTS.FPS));
+var myInt = window.setInterval(function(){if(FRAMEWORK_CONSTANTS.running){handlePhysics(); handleDrawing();}}, (1000/FRAMEWORK_CONSTANTS.FPS));
 
 
 

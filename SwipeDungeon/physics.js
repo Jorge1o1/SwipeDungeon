@@ -3,52 +3,10 @@ function receiveInput(player, swipes){
 	//Take in game, the game state, and swipe, a vector, and move the player in that direction at a fixed speed (player.constants.speed).
 	//Return nothing.
 
-	game.player.state = 1;
+	player.state = 1;
+	player.jump.currentTarget.x = player.bound.position.x + swipes.x;
+	player.jump.currentTarget.y = player.bound.position.y + swipes.y;
 
-	console.log(game.touchPoints);
-
-	var touchPoints = keepEveryNth(game.touchPoints, Math.floor(game.touchPoints.length/5));
-	
-	var splitIndexes = [];
-	var splitStart = 0;
-	for (var i = 2; i < touchPoints.length; i++) {
-		var deltaX = touchPoints[i].x - touchPoints[i-1].x;
-		var deltaY = touchPoints[i].y - touchPoints[i-1].y;
-
-		var deltaX_prev = touchPoints[i-1].x - touchPoints[i-2].x;
-		var deltaY_prev = touchPoints[i-1].y - touchPoints[i-2].y;
-
-		if(getSign(deltaX) != getSign(deltaX_prev) || getSign(deltaY) != getSign(deltaY_prev)){
-			console.log("FRAME: " + i + " DELTAXSign:" + getSign(deltaX) + " DELTAXPrevSign: " + getSign(deltaX_prev) + " DELTAYSign: " + getSign(deltaY) + " DELTAYPrevSign: " + getSign(deltaY_prev));
-			splitIndexes.push([splitStart, i]);
-			splitStart = i;
-		}
-	}
-	splitIndexes.push([splitStart, game.touchPoints.length]);
-	console.log(splitIndexes);
-	for(var i = 0; i < splitIndexes.length; i++){
-		
-	}
-
-	//player.jump.currentTarget.x = player.bound.position.x + swipes.x;
-	//player.jump.currentTarget.y = player.bound.position.y + swipes.y;
-
-	game.touchPoints = [];
-
-}
-
-function keepEveryNth(array, n){
-	var arr = [];
-	for(var i = 0; i < array.length; i++){
-		if(i % n == 0) arr.push(array[i]);
-	}
-	return arr;
-
-}
-
-function getSign(num){
-	if(num == 0) return 1;
-	return num/Math.abs(num);
 }
 
 function updatePlayerPosition(player){
