@@ -41,8 +41,8 @@ var game = {
 		},
 		bound:{
 			position:{
-				x: 0,
-				y: 0
+				x: 500,
+				y: 500
 			},
 			size:{
 				x:20,

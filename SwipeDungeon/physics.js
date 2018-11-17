@@ -65,7 +65,7 @@ function updatePlayerPosition(player){
 }
 
 function spawnEnemy(enemies){
-	var types = ["Ghost", "Burst","Archer", "Mage"];
+	var types = ["Ghost","Burst", "Archer", "Mage"];
 	var currType = types[Math.floor(Math.random()*types.length)];
 	if (enemies.length <= game.constants.enemySpawnRate) {
 		var enemy = {
@@ -92,9 +92,11 @@ function spawnEnemy(enemies){
 				var enemy = {
 					type: "Projectile", 
 					bound: {
-						position: {x: enemies[i].bound.x + 100, y: enemies[i].bound.y + 100},
-						size: {x: 50, y: 50}, 
-						velocity: Math.random()*2 + 1,
+						position: {x: enemies[i].bound.position.x - 50, y: enemies[i].bound.position.y - 50},
+						size: {x: 5, y: 5}, 
+						velocity: 1,
+						target: {x: game.player.bound.position.x, y: game.player.bound.position.y},
+						ang: Math.atan(game.player.bound.position.x - enemies[i].bound.position.x, game.player.bound.position.y - enemies[i].bound.position.y),
 						health: 1
 					}
 				};	
@@ -112,7 +114,7 @@ function checkCollisions(player, enemies){
 
 	for(var i = 0; i < enemies.length; i++){
 		for(var j = i+1; j < enemies.length; j++){
-			if(enemies[i].type != "Archer" || enemies[i].type != "Mage"){
+			if(enemies[j].type != "Archer" && enemies[j].type != "Mage" && enemies[j].type != "Projectile"){
 			var deltaX = enemies[j].bound.position.x - enemies[i].bound.position.x;
 			var deltaY = enemies[j].bound.position.y - enemies[i].bound.position.y;				
 			if(Math.abs(deltaX) < enemies[i].bound.size.x && Math.abs(deltaY) < enemies[i].bound.size.y){
@@ -181,7 +183,7 @@ function updateEnemies(player, enemies){
 	//Return nothing.
 
 	for(var i = 0; i < enemies.length; i++){
-		if(enemies[i].type != "Archer" && enemies[i].type != "Mage"){
+		if(enemies[i].type != "Archer" && enemies[i].type != "Mage" && enemies[i].type != "Projectile"){
 				var deltaX = enemies[i].bound.position.x - player.bound.position.x;
 				var deltaY = enemies[i].bound.position.y - player.bound.position.y;
 
@@ -214,16 +216,28 @@ function updateEnemies(player, enemies){
 					}
 				} 
 			
+		} else if (enemies[i].type == "Projectile"){
+			var deltaX = enemies[i].bound.position.x - player.bound.position.x;
+			var deltaY = enemies[i].bound.position.y - player.bound.position.y;
+			if(enemies[i].bound.target.x != enemies[i].bound.position.x && enemies[i].bound.target.y != enemies[i].bound.position.y){
+			var deltaX = enemies[i].bound.position.x - player.bound.position.x;
+			var deltaY = enemies[i].bound.position.y - player.bound.position.y;
+			if (Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)) != 0){
+				enemies[i].bound.position.x = enemies[i].bound.position.x - 2*(deltaX/Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)))*enemies[i].bound.velocity;
+				enemies[i].bound.position.y = enemies[i].bound.position.y - 2*(deltaY/Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)))*enemies[i].bound.velocity;
+			}
+			}
+
 		} else {
-				var deltaX = enemies[i].bound.position.x - player.bound.position.x;
-				var deltaY = enemies[i].bound.position.y - player.bound.position.y;
-				if (Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)) < 250){
-					enemies[i].bound.position.x = enemies[i].bound.position.x + 2*(deltaX/Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)))*enemies[i].bound.velocity;
-                    enemies[i].bound.position.y = enemies[i].bound.position.y + 2*(deltaY/Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)))*enemies[i].bound.velocity;
-                }
-            }
-        }
-    }
+			var deltaX = enemies[i].bound.position.x - player.bound.position.x;
+			var deltaY = enemies[i].bound.position.y - player.bound.position.y;
+			if (Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)) < 250){
+				enemies[i].bound.position.x = enemies[i].bound.position.x + 2*(deltaX/Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)))*enemies[i].bound.velocity;
+				enemies[i].bound.position.y = enemies[i].bound.position.y + 2*(deltaY/Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)))*enemies[i].bound.velocity;
+			}
+		}
+	}
+}
 
 function spawnParticles(x, y, particleSize, color, amount){
 	//
