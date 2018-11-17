@@ -114,7 +114,7 @@ function checkCollisions(player, enemies){
 
 	for(var i = 0; i < enemies.length; i++){
 		for(var j = i+1; j < enemies.length; j++){
-			if(enemies[j].type != "Archer" && enemies[j].type != "Mage" && enemies[j].type != "Projectile"){
+			if(enemies[i].type == "Ghost"){
 			var deltaX = enemies[j].bound.position.x - enemies[i].bound.position.x;
 			var deltaY = enemies[j].bound.position.y - enemies[i].bound.position.y;				
 			if(Math.abs(deltaX) < enemies[i].bound.size.x && Math.abs(deltaY) < enemies[i].bound.size.y){
@@ -217,11 +217,9 @@ function updateEnemies(player, enemies){
 				} 
 			
 		} else if (enemies[i].type == "Projectile"){
-			var deltaX = enemies[i].bound.position.x - player.bound.position.x;
-			var deltaY = enemies[i].bound.position.y - player.bound.position.y;
 			if(enemies[i].bound.target.x != enemies[i].bound.position.x && enemies[i].bound.target.y != enemies[i].bound.position.y){
-			var deltaX = enemies[i].bound.position.x - player.bound.position.x;
-			var deltaY = enemies[i].bound.position.y - player.bound.position.y;
+			var deltaX = enemies[i].bound.position.x - enemies[i].bound.target.x;
+			var deltaY = enemies[i].bound.position.y - enemies[i].bound.target.y;
 			if (Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)) != 0){
 				enemies[i].bound.position.x = enemies[i].bound.position.x - 2*(deltaX/Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)))*enemies[i].bound.velocity;
 				enemies[i].bound.position.y = enemies[i].bound.position.y - 2*(deltaY/Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)))*enemies[i].bound.velocity;
