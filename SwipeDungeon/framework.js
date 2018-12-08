@@ -38,8 +38,8 @@ var game = {
 				y: 500
 			},
 			size:{
-				x:20,
-				y:20
+				x:40,
+				y:40
 			}
 		},
 		state: 0 //0 is normal, 1 is jumping

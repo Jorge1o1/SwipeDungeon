@@ -2,28 +2,16 @@ function drawAssets(){
 	//This function is triggered every frame.
 	//Use the "ctx" object and the "ctx.drawImage" or "ctx.fillRect" functions to draw the game.
 	ctx.fillStyle = "black";
-	//ctx.fillRect(game.player.bound.position.x, game.player.bound.position.y, game.player.bound.size.x, game.player.bound.size.y);
-	var player = new Image();
-	player.src = 'player_idle_front.png';
-
-	if(game.player.state == 1){
-		if(game.player.bound.position.x - game.player.jump.currentTarget.x > 0){
-			player.src = 'player_battle_left.png';
-		}else{
-			player.src = 'player_battle_right.png';
-		}
-	}
-	ctx.drawImage(player, game.player.bound.position.x, game.player.bound.position.y, game.player.bound.size.x, game.player.bound.size.y);
-	
+	ctx.fillRect(game.player.bound.position.x, game.player.bound.position.y, game.player.bound.size.x, game.player.bound.size.y);
 	for (var i = game.enemies.length - 1; i >= 0; i--) {
 		if (game.enemies[i].type == "Ghost") {
-			if(game.enemies[i].bound.active == false) {
+			if(game.enemies[i].bound.hidden.active == false) {
 				ctx.fillStyle = "orange";
-			} else if (game.enemies[i].bound.active == true){
+			} else if (game.enemies[i].bound.hidden.active == true){
 				ctx.fillStyle = "grey";
 			}
 			ctx.fillRect(game.enemies[i].bound.position.x, game.enemies[i].bound.position.y, game.enemies[i].bound.size.x, game.enemies[i].bound.size.y);
-		} else if (game.enemies[i].type == "Burst") {
+		} else if (game.enemies[i].type == "Burst") { 
 			ctx.fillStyle = "black";
 			ctx.fillRect(game.enemies[i].bound.position.x, game.enemies[i].bound.position.y, game.enemies[i].bound.size.x, game.enemies[i].bound.size.y);
 		} else if (game.enemies[i].type == "Mage") {
