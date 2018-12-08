@@ -23,7 +23,7 @@ function updatePlayerPosition(player){
 }
 
 function spawnEnemy(enemies){
-	var types = ["Archer", "Mage"];
+	var types = ["Ghost","Burst","Archer", "Mage"];
 	var currType = types[Math.floor(Math.random()*types.length)];
 	if (enemies.length <= game.constants.enemySpawnRate) {
 		var enemy = {
@@ -46,7 +46,7 @@ function spawnEnemy(enemies){
 	}
 	for (var i = 0; i < enemies.length; i++) {
 		if(enemies[i].type == "Archer" || enemies[i].type == "Mage") {
-			if(enemies[i].bound.counter % 50 == 0){
+			if(enemies[i].bound.counter % 100 == 0){
 				enemies[i].bound.counter = 0;
 				var enemy = {
 					type: "Projectile", 
@@ -92,7 +92,7 @@ function checkCollisions(player, enemies){
 							bound: {
 								position: {x: currX + Math.random() * 10, y: currY + Math.random() * 10},
 								size: {x:20, y:20}, 
-								velocity: 4, 
+								velocity: 2, 
 								health: 1, 
 							}
 						};
@@ -100,6 +100,7 @@ function checkCollisions(player, enemies){
 						}
 	 				} else {
 	 					enemies.splice(i, 1);
+	 					game.constants.kills+=1;
 		 			}
 		 		} else if (enemies[i].type == "Ghost" && enemies[i].bound.active == false){
 		 			enemies[i].bound.health-=1;	
