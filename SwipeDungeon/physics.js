@@ -23,7 +23,7 @@ function updatePlayerPosition(player){
 }
 
 function spawnEnemy(enemies){
-	var types = ["Ghost","Burst", "Archer", "Mage"];
+	var types = ["Archer", "Mage"];
 	var currType = types[Math.floor(Math.random()*types.length)];
 	if (enemies.length <= game.constants.enemySpawnRate) {
 		var enemy = {
@@ -31,9 +31,10 @@ function spawnEnemy(enemies){
 			bound: {
 				position: {x: Math.random() * 500, y: Math.random() * 500},
 				size: {x: 25, y: 25}, 
-				velocity: Math.random()*2 + 1, 
-				health: 1, 
-				hidden: {counter: 0, active: false}
+				velocity: 1, 
+				health: 2, 
+				counter: 0, 
+				active: false,
 			}
 		};
 		if (enemy.type == "Burst") {
@@ -43,26 +44,26 @@ function spawnEnemy(enemies){
 		}
 		enemies.push(enemy);
 	}
-	//Spawn Projectile
-	if(game.tick % 100 == 0){
-		for (var i = 0; i < enemies.length; i++) {
-			if(enemies[i].type == "Archer" || enemies[i].type == "Mage") {
+	for (var i = 0; i < enemies.length; i++) {
+		if(enemies[i].type == "Archer" || enemies[i].type == "Mage") {
+			if(enemies[i].bound.counter % 50 == 0){
+				enemies[i].bound.counter = 0;
 				var enemy = {
 					type: "Projectile", 
 					bound: {
-						position: {x: enemies[i].bound.position.x - 50, y: enemies[i].bound.position.y - 50},
-						size: {x: 5, y: 5}, 
+						kind: enemies[i].type,
+						position: {x: enemies[i].bound.position.x, y: enemies[i].bound.position.y},
+						size: {x: 10, y: 10}, 
 						velocity: 1,
 						target: {x: game.player.bound.position.x, y: game.player.bound.position.y},
-						ang: Math.atan(game.player.bound.position.x - enemies[i].bound.position.x, game.player.bound.position.y - enemies[i].bound.position.y),
-						health: 1
 					}
-				};	
-				enemies.push(enemy);		
-			}
-		}			
-	}
+				};
+				enemies.push(enemy);	
+			} 		
+		}
+	}			
 }
+
 
 function checkCollisions(player, enemies){
 	//This function is triggered every frame.
@@ -70,43 +71,20 @@ function checkCollisions(player, enemies){
 	//If not and player and enemies have collided, player takes damage.
 	//Return nothing.
 
-	for(var i = 0; i < enemies.length; i++){
-		for(var j = i+1; j < enemies.length; j++){
-			if(enemies[i].type == "Ghost"){
-			var deltaX = enemies[j].bound.position.x - enemies[i].bound.position.x;
-			var deltaY = enemies[j].bound.position.y - enemies[i].bound.position.y;				
-			if(Math.abs(deltaX) < enemies[i].bound.size.x && Math.abs(deltaY) < enemies[i].bound.size.y){
-				//overlapping
-				if(Math.abs(deltaX) > Math.abs(deltaY)){
-					//nudging left-right
-					if(deltaX < 0){ //nudging left
-						enemies[j].bound.position.x = enemies[i].bound.position.x - enemies[j].bound.size.x;
-					}else{ //nudge right
-						enemies[j].bound.position.x = enemies[i].bound.position.x + enemies[j].bound.size.x;
-					}
-				}else{
-					//nudging up-down
-					if(deltaY < 0){ //nudging left
-						enemies[j].bound.position.y = enemies[i].bound.position.y - enemies[j].bound.size.y;
-					}else{ //nudge right
-						enemies[j].bound.position.y = enemies[i].bound.position.y + enemies[j].bound.size.y;
-					}
-				}
-			}
-		}
-	}
-}
+	var playerx = game.player.bound.position.x;
+	var playery = game.player.bound.position.y;
 
 	for(var i = 0; i < enemies.length; i++){
-	 	if (Math.abs(enemies[i].bound.position.x - game.player.bound.position.x) < enemies[i].bound.size.x && Math.abs(enemies[i].bound.position. y- game.player.bound.position.y) < enemies[i].bound.size.y){
-		 	if(player.state == 0){ //not jumping (enemy hurts player)		
-		 		game.player.health--;
-		 	}else{ //jumping (player hurts enemy)
-		 		if (enemies[i].bound.health == 0){
-			 		if(enemies[i].type=="Burst"){
+		if (Math.abs(enemies[i].bound.position.x - playerx) < player.bound.size.x && Math.abs(enemies[i].bound.position.y - playery) < player.bound.size.y){
+			if(player.state == 0){
+				game.player.health--;
+				if(enemies[i].type == "Projectile")enemies.splice(i, 1);
+			}
+			else { //jumping (player hurts enemy)
+				if (enemies[i].bound.health == 0){
+					if(enemies[i].type=="Burst"){
 						var currX = enemies[i].bound.position.x;
 						var currY = enemies[i].bound.position.y;
-
 						enemies.splice(i, 1);
 						for (var i = 0; i < 5; i++) {
 							var enemy = {
@@ -116,20 +94,19 @@ function checkCollisions(player, enemies){
 								size: {x:20, y:20}, 
 								velocity: 4, 
 								health: 1, 
-								hidden: {counter: 0, active: false}
 							}
 						};
 						enemies.push(enemy);
 						}
-		 			} else {
-		 				enemies.splice(i, 1);
+	 				} else {
+	 					enemies.splice(i, 1);
 		 			}
-		 		} else if (enemies[i].type == "Ghost" && enemies[i].bound.hidden.active == false){
+		 		} else if (enemies[i].type == "Ghost" && enemies[i].bound.active == false){
 		 			enemies[i].bound.health-=1;	
 		 		} else if (enemies[i].type != "Ghost"){
-		 			enemies[i].bound.health-=1;
-		 		}
-		 	}
+					enemies[i].bound.health-=1;
+	 			}
+	 		}
 	 	}
 	}
 }
@@ -139,57 +116,64 @@ function updateEnemies(player, enemies){
 	//There is more freedom here to have fun with the enemy AI.
 	//You could just have each enemy move straight towards the player.
 	//Return nothing.
-
+	
 	for(var i = 0; i < enemies.length; i++){
+		var deltaX = enemies[i].bound.position.x - player.bound.position.x;
+		var deltaY = enemies[i].bound.position.y - player.bound.position.y;
 		if(enemies[i].type != "Archer" && enemies[i].type != "Mage" && enemies[i].type != "Projectile"){
-				var deltaX = enemies[i].bound.position.x - player.bound.position.x;
-				var deltaY = enemies[i].bound.position.y - player.bound.position.y;
-
-					if(enemies[i].bound.position.x < player.bound.position.x){
-							enemies[i].bound.position.x = enemies[i].bound.position.x + enemies[i].bound.velocity;
-					}else{
-							enemies[i].bound.position.x = enemies[i].bound.position.x - enemies[i].bound.velocity;
-					}
-
-					if(enemies[i].bound.position.y < player.bound.position.y){
-							enemies[i].bound.position.y = enemies[i].bound.position.y + enemies[i].bound.velocity;
-					}else{
-							enemies[i].bound.position.y = enemies[i].bound.position.y - enemies[i].bound.velocity;
-					}	
-
-					if(enemies[i].type == "Ghost") {
-						if(enemies[i].bound.hidden.active == true){
-							enemies[i].bound.hidden.counter += 1;
-							if(enemies[i].bound.hidden.counter == 75) {
-								enemies[i].bound.hidden.active = false;
-								enemies[i].bound.hidden.counter = 0;
-							}
-						} else {
-
-						enemies[i].bound.hidden.counter += 1;
-						if(enemies[i].bound.hidden.counter == 100) {
-							enemies[i].bound.hidden.active = true;
-							enemies[i].bound.hidden.counter = 0;
-						}
-					}
-				} 
-			
-		} else if (enemies[i].type == "Projectile"){
-			if(enemies[i].bound.target.x != enemies[i].bound.position.x && enemies[i].bound.target.y != enemies[i].bound.position.y){
-			var deltaX = enemies[i].bound.position.x - enemies[i].bound.target.x;
-			var deltaY = enemies[i].bound.position.y - enemies[i].bound.target.y;
-			if (Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)) != 0){
-				enemies[i].bound.position.x = enemies[i].bound.position.x - 2*(deltaX/Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)))*enemies[i].bound.velocity;
-				enemies[i].bound.position.y = enemies[i].bound.position.y - 2*(deltaY/Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)))*enemies[i].bound.velocity;
+			//Check X
+			if(enemies[i].bound.position.x < player.bound.position.x){
+				enemies[i].bound.position.x = enemies[i].bound.position.x + enemies[i].bound.velocity;
+			}else{
+				enemies[i].bound.position.x = enemies[i].bound.position.x - enemies[i].bound.velocity;
 			}
+			//Check Y
+			if(enemies[i].bound.position.y < player.bound.position.y){
+				enemies[i].bound.position.y = enemies[i].bound.position.y + enemies[i].bound.velocity;
+			}else{
+				enemies[i].bound.position.y = enemies[i].bound.position.y - enemies[i].bound.velocity;
+			}
+
+
+			if(enemies[i].type == "Ghost") {
+				if(enemies[i].bound.active == true){
+					enemies[i].bound.counter += 1;
+					if(enemies[i].bound.counter == 75) {
+						enemies[i].bound.active = false;
+						enemies[i].bound.counter = 0;
+					}
+				} else {
+					enemies[i].bound.counter += 1;
+					if(enemies[i].bound.counter == 100) {
+						enemies[i].bound.active = true;
+						enemies[i].bound.counter = 0;
+					}
+				}
+			} 
+		} else if (enemies[i].type == "Projectile"){
+			deltaX = enemies[i].bound.position.x - enemies[i].bound.target.x;
+			deltaY = enemies[i].bound.position.y - enemies[i].bound.target.y;
+			if(Math.abs(deltaX) < enemies[i].bound.size.x && Math.abs(deltaY) < enemies[i].bound.size.y){
+				if(enemies[i].bound.kind == "Mage" && enemies[i].bound.size.x < 50 && enemies[i].bound.size.x < 50){
+					enemies[i].bound.size.x = enemies[i].bound.size.x + 1;
+					enemies[i].bound.size.y = enemies[i].bound.size.y + 1;
+				} else enemies.splice(i,1);
+				
+			} else {
+				if (Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)) != 0){
+					enemies[i].bound.position.x = enemies[i].bound.position.x - 2*(deltaX/Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)))*enemies[i].bound.velocity;
+					enemies[i].bound.position.y = enemies[i].bound.position.y - 2*(deltaY/Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)))*enemies[i].bound.velocity;
+				}
 			}
 
 		} else {
-			var deltaX = enemies[i].bound.position.x - player.bound.position.x;
-			var deltaY = enemies[i].bound.position.y - player.bound.position.y;
+			enemies[i].bound.counter+=1;
 			if (Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)) < 250){
 				enemies[i].bound.position.x = enemies[i].bound.position.x + 2*(deltaX/Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)))*enemies[i].bound.velocity;
 				enemies[i].bound.position.y = enemies[i].bound.position.y + 2*(deltaY/Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)))*enemies[i].bound.velocity;
+			} else if (Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)) > 500){
+				enemies[i].bound.position.x = enemies[i].bound.position.x - 2*(deltaX/Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)))*enemies[i].bound.velocity;
+				enemies[i].bound.position.y = enemies[i].bound.position.y - 2*(deltaY/Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2)))*enemies[i].bound.velocity;
 			}
 		}
 	}
