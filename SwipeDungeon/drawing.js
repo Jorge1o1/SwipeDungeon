@@ -61,6 +61,8 @@ function drawUI(){
 	 	ctx.filledArc(Math.random(),Math.random(),50,0,2*Math.PI);
 	}*/
 	ctx.fillStyle = "red";
-    ctx.fillRect(200, 10, game.player.health*5, 5);
+	if (game.player.health > 0){
+		ctx.fillRect(200, 10, game.player.health*5, 5);
+	}
 	
 }
