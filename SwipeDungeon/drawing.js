@@ -6,6 +6,8 @@ function drawAssets(){
 	var player = new Image();
 	player.src = 'player_idle_front.png';
 
+	var cameraPos = {x: game.player.bound.position.x-250, y: game.player.bound.position.y-250};
+
 	if(game.player.state == 1){
 		if(game.player.bound.position.x - game.player.jump.currentTarget.x > 0){
 			player.src = 'player_battle_left.png';
@@ -13,7 +15,7 @@ function drawAssets(){
 			player.src = 'player_battle_right.png';
 		}
 	}
-	ctx.drawImage(player, game.player.bound.position.x, game.player.bound.position.y, game.player.bound.size.x, game.player.bound.size.y);
+	ctx.drawImage(player, game.player.bound.position.x-cameraPos.x, game.player.bound.position.y-cameraPos.y, game.player.bound.size.x, game.player.bound.size.y);
 	
 	for (var i = game.enemies.length - 1; i >= 0; i--) {
 		if (game.enemies[i].type == "Ghost") {
@@ -22,20 +24,20 @@ function drawAssets(){
 			} else if (game.enemies[i].bound.active == true){
 				ctx.fillStyle = "grey";
 			}
-			ctx.fillRect(game.enemies[i].bound.position.x, game.enemies[i].bound.position.y, game.enemies[i].bound.size.x, game.enemies[i].bound.size.y);
+			ctx.fillRect(game.enemies[i].bound.position.x-cameraPos.x, game.enemies[i].bound.position.y-cameraPos.y, game.enemies[i].bound.size.x, game.enemies[i].bound.size.y);
 		} else if (game.enemies[i].type == "Burst") {
 			ctx.fillStyle = "black";
-			ctx.fillRect(game.enemies[i].bound.position.x, game.enemies[i].bound.position.y, game.enemies[i].bound.size.x, game.enemies[i].bound.size.y);
+			ctx.fillRect(game.enemies[i].bound.position.x-cameraPos.x, game.enemies[i].bound.position.y-cameraPos.y, game.enemies[i].bound.size.x, game.enemies[i].bound.size.y);
 		} else if (game.enemies[i].type == "Mage") {
 			ctx.fillStyle = "blue";
-			ctx.fillRect(game.enemies[i].bound.position.x, game.enemies[i].bound.position.y, game.enemies[i].bound.size.x, game.enemies[i].bound.size.y);
+			ctx.fillRect(game.enemies[i].bound.position.x-cameraPos.x, game.enemies[i].bound.position.y-cameraPos.y, game.enemies[i].bound.size.x, game.enemies[i].bound.size.y);
 		} else if (game.enemies[i].type == "Archer") {
 			ctx.fillStyle = "green";
-			ctx.fillRect(game.enemies[i].bound.position.x, game.enemies[i].bound.position.y, game.enemies[i].bound.size.x, game.enemies[i].bound.size.y);
+			ctx.fillRect(game.enemies[i].bound.position.x-cameraPos.x, game.enemies[i].bound.position.y-cameraPos.y, game.enemies[i].bound.size.x, game.enemies[i].bound.size.y);
 		} else { 
 			// Make misc red (atm. Popped, projectiles)
 			ctx.fillStyle = "red";
-			ctx.fillRect(game.enemies[i].bound.position.x, game.enemies[i].bound.position.y, game.enemies[i].bound.size.x, game.enemies[i].bound.size.y);
+			ctx.fillRect(game.enemies[i].bound.position.x-cameraPos.x, game.enemies[i].bound.position.y-cameraPos.y, game.enemies[i].bound.size.x, game.enemies[i].bound.size.y);
 		}
 	}
 
