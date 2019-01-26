@@ -17,8 +17,8 @@ var game = {
 	tick: 0, //do not modify
 	constants:{
 		enemySpawnRate: 200,
-		thresh: 100,
-		growth_weight: 0.2,
+		thresh: 1200,
+		growth_rate: 0.2,
 		friction: 0.998
 	},
 	player: {
@@ -36,8 +36,8 @@ var game = {
 		},
 		bound:{
 			position:{
-				x: 750,
-				y: 500
+				x: 100,
+				y: 100
 			},
 			size:{
 				x:40,
@@ -58,7 +58,6 @@ var game = {
 
 function handlePhysics(){
 	game.tick++;
-
 	if(game.tick % game.constants.enemySpawnRate == 0) spawnEnemy(game.enemies);
 	updateEnemies(game.player, game.enemies);
 	updatePlayerPosition(game.player);

@@ -4,9 +4,19 @@ function drawAssets(){
 	ctx.fillStyle = "black";
 	//ctx.fillRect(game.player.bound.position.x, game.player.bound.position.y, game.player.bound.size.x, game.player.bound.size.y);
 	var player = new Image();
-	player.src = 'player_idle_front.png';
+	player.src = 'images/player_idle_front.png';
+	
+	var archer = new Image();
+	archer.src = 'images/archer.png';
+		
+	var player = new Image();
+	giant.src = 'images/giant.png';
+		
+	var player = new Image();
+	mage.src = 'images/mage.png';
 
-	var cameraPos = {x: game.player.bound.position.x-250, y: game.player.bound.position.y-250};
+	var cameraPos = {x: game.player.bound.position.x-500, y: game.player.bound.position.y-250};
+	ctx.fillRect(game.player.bound.position.x + 15 - cameraPos.x, game.player.bound.position.y+12.5 -cameraPos.y, game.player.bound.size.x - 30, game.player.bound.size.y - 15);
 
 	if(game.player.state == 1){
 		if(game.player.bound.position.x - game.player.jump.currentTarget.x > 0){
@@ -26,14 +36,11 @@ function drawAssets(){
 			}
 			ctx.fillRect(game.enemies[i].bound.position.x-cameraPos.x, game.enemies[i].bound.position.y-cameraPos.y, game.enemies[i].bound.size.x, game.enemies[i].bound.size.y);
 		} else if (game.enemies[i].type == "Burst") {
-			ctx.fillStyle = "black";
-			ctx.fillRect(game.enemies[i].bound.position.x-cameraPos.x, game.enemies[i].bound.position.y-cameraPos.y, game.enemies[i].bound.size.x, game.enemies[i].bound.size.y);
+			ctx.drawImage(giant, game.enemies[i].bound.position.x-cameraPos.x, game.enemies[i].bound.position.y-cameraPos.y, game.enemies[i].bound.size.x, game.enemies[i].bound.size.y);
 		} else if (game.enemies[i].type == "Mage") {
-			ctx.fillStyle = "blue";
-			ctx.fillRect(game.enemies[i].bound.position.x-cameraPos.x, game.enemies[i].bound.position.y-cameraPos.y, game.enemies[i].bound.size.x, game.enemies[i].bound.size.y);
+			ctx.drawImage(mage, game.enemies[i].bound.position.x-cameraPos.x, game.enemies[i].bound.position.y-cameraPos.y, game.enemies[i].bound.size.x, game.enemies[i].bound.size.y);
 		} else if (game.enemies[i].type == "Archer") {
-			ctx.fillStyle = "green";
-			ctx.fillRect(game.enemies[i].bound.position.x-cameraPos.x, game.enemies[i].bound.position.y-cameraPos.y, game.enemies[i].bound.size.x, game.enemies[i].bound.size.y);
+			ctx.drawImage(archer, game.enemies[i].bound.position.x-cameraPos.x, game.enemies[i].bound.position.y-cameraPos.y, game.enemies[i].bound.size.x, game.enemies[i].bound.size.y);
 		} else { 
 			// Make misc red (atm. Popped, projectiles)
 			ctx.fillStyle = "red";

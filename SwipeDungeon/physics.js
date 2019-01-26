@@ -23,7 +23,7 @@ function updatePlayerPosition(player){
 }
 
 function spawnEnemy(enemies){
-	var types = ["Ghost","Burst","Archer", "Mage"];
+	var types = ["Archer"];
 	var currType = types[Math.floor(Math.random()*types.length)];
 	if (enemies.length <= game.constants.enemySpawnRate) {
 		var enemy = {
@@ -54,8 +54,9 @@ function spawnEnemy(enemies){
 						kind: enemies[i].type,
 						position: {x: enemies[i].bound.position.x, y: enemies[i].bound.position.y},
 						size: {x: 10, y: 10}, 
-						velocity: 1,
-						target: {x: game.player.bound.position.x, y: game.player.bound.position.y},
+						velocity: 0.75,
+						target: {x: game.player.bound.position.x + game.player.bound.size.x / 2,
+						 y: game.player.bound.position.y + game.player.bound.size.x / 2},
 					}
 				};
 				enemies.push(enemy);	
@@ -71,11 +72,11 @@ function checkCollisions(player, enemies){
 	//If not and player and enemies have collided, player takes damage.
 	//Return nothing.
 
-	var playerx = game.player.bound.position.x;
-	var playery = game.player.bound.position.y;
+	var playerx = game.player.bound.position.x + 15;
+	var playery = game.player.bound.position.y + 10;
 
 	for(var i = 0; i < enemies.length; i++){
-		if (Math.abs(enemies[i].bound.position.x - playerx) < player.bound.size.x && Math.abs(enemies[i].bound.position.y - playery) < player.bound.size.y){
+		if (Math.abs(enemies[i].bound.position.x - playerx) < player.bound.size.x - 35 && Math.abs(enemies[i].bound.position.y - playery) < player.bound.size.y - 10){
 			if(player.state == 0){
 				game.player.health--;
 				if(enemies[i].type == "Projectile")enemies.splice(i, 1);
